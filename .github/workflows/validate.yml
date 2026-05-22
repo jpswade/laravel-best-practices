@@ -1,0 +1,31 @@
+name: validate
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer:v2
+
+      - name: Validate composer.json
+        run: composer validate --strict --no-check-publish
+
+      - name: PHP lint
+        run: find src -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Validate pint.json
+        run: php -r 'json_decode(file_get_contents("pint.json"), null, 512, JSON_THROW_ON_ERROR);'
+
+      - name: Validate phpstan.neon.dist
+        run: |
+          composer require --dev nette/neon --no-progress --quiet
+          php -r 'require "vendor/autoload.php"; Nette\Neon\Neon::decode(file_get_contents("phpstan.neon.dist"));'

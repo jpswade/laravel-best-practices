@@ -1,0 +1,34 @@
+# Recommended PHPStan / Larastan baseline for projects using jpswade/laravel-best-practices.
+#
+# RFC practices this config enforces:
+#   - consistent return types          (Larastan level 6+)
+#   - no bare \Exception catches       (phpstan-strict-rules: tooWideThrowType, missingCheckedExceptionInThrows)
+#   - strict comparisons               (phpstan-strict-rules: defence-in-depth alongside Pint's strict_comparison)
+#
+# Level 6 is a workable starting point on existing codebases.
+# Bump to level 8 once the codebase is clean; level 9 is the strict ideal.
+#
+# Optional opt-in for the "default-to-private visibility" practice:
+#   composer require --dev tomasvotruba/unused-public
+# Then add `- vendor/tomasvotruba/unused-public/config/extension.neon` to `includes`.
+# It is not in this baseline because adopting it cleanly often requires refactoring.
+
+includes:
+    - vendor/larastan/larastan/extension.neon
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+
+parameters:
+    level: 6
+    paths:
+        - app
+        - tests
+    checkMissingIterableValueType: true
+    treatPhpDocTypesAsCertain: false
+    exceptions:
+        check:
+            missingCheckedExceptionInThrows: true
+            tooWideThrowType: true
+        implicitThrows: false
+        uncheckedExceptionClasses:
+            - LogicException
+            - RuntimeException

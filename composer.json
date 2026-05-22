@@ -1,0 +1,32 @@
+{
+    "name": "jpswade/laravel-best-practices",
+    "description": "Opinionated, additive Laravel best-practices overlay for Laravel Boost. Composes alongside Boost's built-in laravel-best-practices skill; covers ground Boost is silent on.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["laravel", "boost", "ai", "best-practices", "cursor", "agents"],
+    "authors": [
+        { "name": "James Wade", "email": "jpswade@gmail.com" }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^10.0 || ^11.0 || ^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jpswade\\LaravelBestPractices\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Jpswade\\LaravelBestPractices\\LaravelBestPracticesServiceProvider"
+            ]
+        }
+    },
+    "suggest": {
+        "laravel/boost": "Required for automatic discovery of the guidelines and skill in this package.",
+        "larastan/larastan": "Required to use the recommended phpstan.neon.dist shipped with this package.",
+        "phpstan/phpstan-strict-rules": "Required to use the recommended phpstan.neon.dist shipped with this package."
+    },
+    "minimum-stability": "stable"
+}
