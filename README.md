@@ -45,51 +45,55 @@ vendor/bin/phpstan analyse
 
 ```
 resources/boost/
-├── guidelines/best-practices/
-│   ├── architecture-additions.md   # naming, default-private, thin handle(), routes, named queues
-│   ├── control-flow.md             # no switch/case, exceptions-only-when-exceptional, return early, ...
-│   ├── eloquent-opinions.md        # soft-deletes-default, integer-money, transactions-as-exception
-│   └── general-design.md           # YAGNI, helpers, strings/interpolation, redundant DocBlocks
+├── guidelines/best-practices.md    # four topics in one file (see "Why one file?" below)
 └── skills/tdd-bug-fixing/
     └── SKILL.md                    # six-step TDD bug-fix loop
 pint.json                            # Laravel preset + strict_types / strict_comparison / is_null / modernize_types_casting
 phpstan.neon.dist                    # Larastan + phpstan-strict-rules at level 6 with exception strictness
 ```
 
+The single `best-practices.md` file is structured as four self-contained H2 sections — **Control Flow**, **Eloquent Opinions**, **Architecture Additions**, **General Design** — each ending with the Boost rules it composes alongside.
+
+## Why one file?
+
+Laravel Boost (v2.4.6 at time of writing) ingests at most one guideline file per third-party package — the per-package keying in `GuidelineComposer::getThirdPartyGuidelines()` overwrites earlier files in the same package, so only the last-sorted file survives. Tracked downstream as [issue #1](https://github.com/jpswade/laravel-best-practices/issues/1) and upstream as [`laravel/boost#822`](https://github.com/laravel/boost/issues/822).
+
+Until the upstream fix lands, all four topics are concatenated into one file. The topic structure is preserved as H2 sections inside `best-practices.md`, and we'll split it back once Boost ingests multiple files per package.
+
 ## Position relative to Boost
 
-This package is **strictly additive**. Every section in every guideline file ends with a `## Composes with Boost` block that links to the Boost rule it sits alongside. Where this overlay takes an opposite position to Boost (currently only "avoid database transactions" vs. Boost's `database.md`), it is flagged in-file so you can remove that section if you prefer Boost's default.
+This package is **strictly additive**. Each H2 section in `best-practices.md` ends with a **Composes with Boost** block that links to the Boost rule it sits alongside. Where this overlay takes an opposite position to Boost (currently only "avoid database transactions" vs. Boost's `database.md`), it is flagged in-file so you can remove that subsection if you prefer Boost's default.
 
 The Pint and PHPStan configs are similarly additive: Pint layers four extra rules on top of the standard `laravel` preset, and the PHPStan config is a baseline you can extend.
 
 ## Cursor (or any non-Boost setup)
 
-If you are not using Laravel Boost — for example, you only use Cursor and want raw guideline files — you can reference the markdown directly:
+If you are not using Laravel Boost — for example, you only use Cursor and want raw guideline content — you can reference the markdown directly:
 
 ```
-vendor/jpswade/laravel-best-practices/resources/boost/guidelines/best-practices/*.md
+vendor/jpswade/laravel-best-practices/resources/boost/guidelines/best-practices.md
 vendor/jpswade/laravel-best-practices/resources/boost/skills/tdd-bug-fixing/SKILL.md
 ```
 
-Either point your Cursor rules at the directory, or copy the files into `.cursor/rules/`. The guidelines themselves are plain Markdown — they do not depend on Boost to be useful.
+Either point a Cursor rule at the file, or copy it into `.cursor/rules/`. The guidelines themselves are plain Markdown — they do not depend on Boost to be useful.
 
-## Adding a new guideline
+## Adding a new practice
 
-Drop a new `.md` file into `resources/boost/guidelines/best-practices/`. Follow the existing shape:
+Open `resources/boost/guidelines/best-practices.md` and add a new `### H3` subsection under whichever `## H2` topic best fits — Control Flow, Eloquent Opinions, Architecture Additions, or General Design. Follow the existing shape:
 
-- One `# H1` title matching the file's topic.
-- A one-paragraph intro that explains how the file sits next to Boost.
-- One `## H2` per practice, with **Incorrect:** / **Correct:** code blocks.
-- A `## Composes with Boost` footer linking back to any Boost rule the file sits alongside.
+- An `### H3` title naming the practice.
+- A short rationale paragraph.
+- **Incorrect:** / **Correct:** code blocks.
+- If the new practice has a direct Boost counterpart, add a bullet to the section's existing **Composes with Boost** list.
 
-Topic-named, kebab-cased filenames (no numeric prefixes). Boost's own rules are organised the same way.
+If the practice belongs to a genuinely new topic (not one of the four existing H2s), add a new `## H2` topic in the same file rather than creating a new `.md` file — see ["Why one file?"](#why-one-file) for why.
 
 ## What this package deliberately does not ship
 
 - No `.ai/` directory — Boost composes content into the consumer's `.ai/` from this package's `resources/boost/`.
 - No service-provider beyond `vendor:publish` for the two config files. No Artisan commands, no facades, no migrations.
-- No file that overlaps Boost's built-in `laravel-best-practices/rules/*.md` — verified by an in-repo overlap check.
-- No Rector config, no `tomasvotruba/unused-public` in the baseline PHPStan config (both are referenced from the relevant guideline sections as opt-in follow-ons).
+- No content that overlaps Boost's built-in `laravel-best-practices/rules/*.md` — verified at authoring time.
+- No Rector config, no `tomasvotruba/unused-public` in the baseline PHPStan config (both are referenced from the relevant guideline subsections as opt-in follow-ons).
 
 ## RFC nature
 
