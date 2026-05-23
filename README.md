@@ -45,24 +45,24 @@ vendor/bin/phpstan analyse
 
 ```
 resources/boost/
-├── guidelines/core.md              # four topics in one file (see "Why one file?" below)
+├── guidelines/core.blade.php              # four topics in one file (see "Why one file?" below)
 └── skills/tdd-bug-fixing/
     └── SKILL.md                    # six-step TDD bug-fix loop
 pint.json                            # Laravel preset + strict_types / strict_comparison / is_null / modernize_types_casting
 phpstan.neon.dist                    # Larastan + phpstan-strict-rules at level 6 with exception strictness
 ```
 
-The single `core.md` file is structured as four self-contained H2 sections — **Control Flow**, **Eloquent Opinions**, **Architecture Additions**, **General Design** — each ending with the Boost rules it composes alongside.
+The single `core.blade.php` file is structured as four self-contained H2 sections — **Control Flow**, **Eloquent Opinions**, **Architecture Additions**, **General Design** — each ending with the Boost rules it composes alongside.
 
 ## Why one file?
 
 Laravel Boost's convention for third-party packages is **one guideline file per package**, paralleling the first-party `core.blade.php` pattern. See [`laravel/boost#822`](https://github.com/laravel/boost/issues/822) for the design context — the per-package keying in `GuidelineComposer::getThirdPartyGuidelines()` is intentional, not a bug.
 
-The four topics accordingly live as H2 sections inside `core.md`: Control Flow, Eloquent Opinions, Architecture Additions, General Design. If a topic later outgrows that shape, the right move is a separate Boost skill (which can ship multiple files) rather than splitting the guideline.
+The four topics accordingly live as H2 sections inside `core.blade.php`: Control Flow, Eloquent Opinions, Architecture Additions, General Design. If a topic later outgrows that shape, the right move is a separate Boost skill (which can ship multiple files) rather than splitting the guideline.
 
 ## Position relative to Boost
 
-This package is **strictly additive**. Each H2 section in `core.md` ends with a **Composes with Boost** block that links to the Boost rule it sits alongside. Where this overlay takes an opposite position to Boost (currently only "avoid database transactions" vs. Boost's `database.md`), it is flagged in-file so you can remove that subsection if you prefer Boost's default.
+This package is **strictly additive**. Each H2 section in `core.blade.php` ends with a **Composes with Boost** block that links to the Boost rule it sits alongside. Where this overlay takes an opposite position to Boost (currently only "avoid database transactions" vs. Boost's `database.md`), it is flagged in-file so you can remove that subsection if you prefer Boost's default.
 
 The Pint and PHPStan configs are similarly additive: Pint layers four extra rules on top of the standard `laravel` preset, and the PHPStan config is a baseline you can extend.
 
@@ -71,7 +71,7 @@ The Pint and PHPStan configs are similarly additive: Pint layers four extra rule
 If you are not using Laravel Boost — for example, you only use Cursor and want raw guideline content — you can reference the markdown directly:
 
 ```
-vendor/jpswade/laravel-best-practices/resources/boost/guidelines/core.md
+vendor/jpswade/laravel-best-practices/resources/boost/guidelines/core.blade.php
 vendor/jpswade/laravel-best-practices/resources/boost/skills/tdd-bug-fixing/SKILL.md
 ```
 
@@ -79,7 +79,7 @@ Either point a Cursor rule at the file, or copy it into `.cursor/rules/`. The gu
 
 ## Adding a new practice
 
-Open `resources/boost/guidelines/core.md` and add a new `### H3` subsection under whichever `## H2` topic best fits — Control Flow, Eloquent Opinions, Architecture Additions, or General Design. Follow the existing shape:
+Open `resources/boost/guidelines/core.blade.php` and add a new `### H3` subsection under whichever `## H2` topic best fits — Control Flow, Eloquent Opinions, Architecture Additions, or General Design. Follow the existing shape:
 
 - An `### H3` title naming the practice.
 - A short rationale paragraph.
