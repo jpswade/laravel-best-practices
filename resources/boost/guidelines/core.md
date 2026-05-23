@@ -4,7 +4,7 @@ Opinionated, additive best-practices that compose alongside Laravel Boost's buil
 
 Four topics, each a self-contained section: **Control Flow**, **Eloquent Opinions**, **Architecture Additions**, **General Design**. Each section ends with the Boost rules it sits alongside.
 
-> **Why one file?** Laravel Boost (v2.4.6 at time of writing) ingests at most one guideline file per third-party package — the per-package keying in `GuidelineComposer::getThirdPartyGuidelines()` overwrites previous files. Tracked downstream as [issue #1](https://github.com/jpswade/laravel-best-practices/issues/1) and upstream as [laravel/boost#822](https://github.com/laravel/boost/issues/822). Once Boost ships a per-file fix, this file will be split back into one per topic.
+> **Why one file?** Laravel Boost's convention for third-party packages is one guideline file per package, mirroring the first-party `core.blade.php` pattern. See [`laravel/boost#822`](https://github.com/laravel/boost/issues/822) for the design context. Topics that outgrow this shape should be split out as a Boost skill rather than as a second guideline file.
 
 ## Control Flow
 
