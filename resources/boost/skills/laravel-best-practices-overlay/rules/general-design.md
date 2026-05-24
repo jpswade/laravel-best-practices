@@ -61,6 +61,50 @@ Concatenation with `.` is fine for joining a small number of literal-with-variab
 
 The "single quotes only, sprintf everywhere" advice from older PHP guides is dated — performance differences are negligible, and the readability win of seeing `{$user->name}` inline outweighs the loose convention of "literals are single-quoted". Use double quotes when the string genuinely contains an expression; single quotes otherwise.
 
+## Do not narrate the code
+
+A comment should explain *why* the code is the way it is, not *what* it is doing. Comments that translate the next line into English add no information and drift the moment the line beneath them changes. If a reader needs the comment to follow the code, rename the symbol or extract a method instead.
+
+Incorrect:
+
+```php
+// Check if the user is active
+if ($user->active) {
+    // Send email
+    Mail::to($user)->send(new WelcomeEmail());
+}
+```
+
+Correct:
+
+```php
+if ($user->isActive()) {
+    $this->sendWelcomeEmail($user);
+}
+```
+
+## Do not annotate diffs
+
+`// new: …`, `// updated to support X`, `// previously …` belong in the commit message, not in the file. They go stale immediately, and AI tools will read them as current truth.
+
+## When a comment earns its place
+
+Keep a comment only when the reason is not derivable from the code itself:
+
+- Non-obvious business rules or product constraints.
+- External constraints (RFC quirks, third-party API behaviour, race-condition windows, browser bugs).
+- Deliberate trade-offs ("O(n²) is acceptable here because n ≤ 50").
+- Warnings ("must run before listener X subscribes", "do not call from inside a transaction").
+- Links to issues, RFCs, or upstream tickets that explain the choice.
+
+Example of a comment that earns its place — it explains an external constraint the code cannot:
+
+```php
+// Stripe occasionally delivers webhook events out of order; an
+// out-of-sequence "payment_intent.succeeded" before "charge.captured" is
+// usually transient and the next event reconciles the state.
+```
+
 ## Drop redundant DocBlocks
 
 PHP has had type hints on parameters since 5.0, return types since 7.0, property types since 7.4, readonly properties since 8.1, and enums since 8.1. Any DocBlock that only restates information already in the signature is noise.

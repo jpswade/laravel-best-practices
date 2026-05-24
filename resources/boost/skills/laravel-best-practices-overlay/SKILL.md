@@ -1,6 +1,6 @@
 ---
 name: laravel-best-practices-overlay
-description: "Apply this skill whenever writing, reviewing, or refactoring Laravel PHP code. Complements Boost's first-party laravel-best-practices skill with opinionated additive rules where Boost is silent. Triggers for control-flow choices (switch vs. match, early returns, exception use, lone-`!` operator, magic numbers vs. enums), Eloquent design (soft deletes, redundant relationship access, transaction discipline, integer-money handling, money on job/queue/API boundaries), architectural defaults (method-naming with no 'and', context-free method names, default-private visibility, thin handle() in jobs/listeners, no logic in routes, named queues by purpose), and general design (YAGNI/dead-code removal, when to use a free-function helper, double-quoted interpolation vs. sprintf, dropping signature-redundant DocBlocks). Also use for Laravel/PHP code reviews and refactoring of existing code to align with these defaults."
+description: "Apply this skill whenever writing, reviewing, or refactoring Laravel PHP code. Complements Boost's first-party laravel-best-practices skill with opinionated additive rules where Boost is silent. Triggers for control-flow choices (switch vs. match, early returns, exception use, exception swallowing in console handle(), lone-`!` operator, magic numbers vs. enums), Eloquent design (soft deletes, redundant relationship access, transaction discipline, integer-money handling, money on job/queue/API boundaries), architectural defaults (method-naming with no 'and', context-free method names, default-private visibility, thin handle() in jobs/listeners, no logic in routes, named queues by purpose), general design (YAGNI/dead-code removal, when to use a free-function helper, double-quoted interpolation vs. sprintf, in-body code comments, dropping signature-redundant DocBlocks), and operational safety (destructive database commands such as migrate:fresh, db:wipe, schema:drop; test-database isolation). Also use for Laravel/PHP code reviews and refactoring of existing code to align with these defaults."
 license: MIT
 metadata:
   author: jpswade
@@ -24,6 +24,7 @@ Check sibling files, related controllers, models, or tests for established patte
 - Reserve exceptions for genuinely exceptional situations
 - Catch the narrowest exception, never bare `\Exception`
 - Question every `try`/`catch` before writing it
+- Do not swallow exceptions in console `handle()` methods
 - Return early; flat code is easier to read than nested code
 - Every path through a method should return the same type
 - Avoid the lone `!` operator; compare explicitly
@@ -51,7 +52,13 @@ Check sibling files, related controllers, models, or tests for established patte
 - YAGNI: delete unused code; git remembers
 - Reach for a free function only for cross-cutting, pure logic
 - Prefer double-quoted interpolation; use `sprintf` only for genuinely formatted output
+- Comments explain *why*, not *what* — don't narrate code, don't annotate diffs
 - Drop DocBlocks that only restate the signature
+
+### 5. Operational Safety → `rules/operational-safety.md`
+
+- Never run destructive database commands (`migrate:fresh`, `db:wipe`, `schema:drop`) without an explicit user request
+- Tests use an isolated database configuration; never a shared instance
 
 ## Composes with Boost
 

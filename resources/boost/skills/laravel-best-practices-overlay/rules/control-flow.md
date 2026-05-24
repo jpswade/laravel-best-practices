@@ -96,6 +96,42 @@ A `try`/`catch` is comparatively expensive and is rarely the cleanest answer. Mo
 
 There are legitimate uses — boundaries with third-party SDKs, infrastructure failures, deserialisation of untrusted input — and these should be explicit and narrow. The bar is: "I am handling this exception meaningfully right here", not "I am catching it just to log and rethrow".
 
+## Do not swallow exceptions in console `handle()`
+
+Console commands' `handle()` methods are a magnet for "wrap everything in `try`/`catch`, log the message, return `FAILURE`". Resist this. Laravel's console kernel already reports the throwable via the configured exception handler, renders it to stderr with a stack trace, and returns a non-zero exit code so `schedule:run` can escalate. A swallowing `catch` strips the stack trace and converts useful alerts into opaque "exit code [1]" notifications.
+
+Incorrect:
+
+```php
+public function handle(SomeService $service): int
+{
+    try {
+        $service->run();
+    } catch (\Throwable $e) {
+        $this->error($e->getMessage());
+
+        return self::FAILURE;
+    }
+
+    return self::SUCCESS;
+}
+```
+
+Correct:
+
+```php
+public function handle(SomeService $service): int
+{
+    $service->run();
+
+    return self::SUCCESS;
+}
+```
+
+`try { … } catch (\Throwable $e) { /* mark a row failed */ throw $e; }` is fine when you genuinely need to mutate persistent state on failure — but the catch must end with `throw $e;`, never a silent `return`.
+
+The same reasoning applies to queued jobs: rely on the framework's `failed()` hook and the `failed_jobs` machinery rather than `try`/`catch` inside `handle()`.
+
 ## Return early / guard clauses
 
 Flat code is easier to read than nested code. Validate inputs and bail out at the top of the method; the happy path is then the unindented body.
