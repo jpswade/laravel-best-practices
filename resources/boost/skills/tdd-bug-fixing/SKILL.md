@@ -17,9 +17,13 @@ When fixing a bug in this repository, follow the red-green-refactor loop below. 
 
 ## The loop
 
-1. **Reproduce the bug.** Before touching production code, work out the exact conditions that trigger it. Stack trace, request payload, model state, environment, timing — whichever apply. If you cannot reproduce it, you cannot fix it.
+1. **Reproduce the bug.** Before touching production code, work out the exact conditions that trigger it. Stack trace, request payload, model state, environment, timing — whichever apply. If you cannot reproduce it, you cannot fix it. Answer these before moving on:
+    - What exactly is happening, and what should happen instead?
+    - Under what exact conditions does it happen (user role, data shape, feature flag, timing, environment)?
+    - Who or what is affected?
+    - Is this new behaviour, or a regression of something that used to work?
 2. **Write a failing test.** Encode the reproduction as a test in the appropriate suite (`tests/Feature`, `tests/Unit`, etc.). Run it. It must fail for the *right reason* — the same assertion the bug violates in production. A test that fails for a setup reason is not a reproduction.
-3. **Implement the minimal fix.** Change only what is required to turn the test green. Do not refactor in the same step. Do not silently widen the scope of the change.
+3. **Implement the minimal fix.** Change only what is required to turn the test green. Fix the root cause, not the symptom — if the test passes only because you suppressed the failure (caught the exception, short-circuited the path, loosened the assertion), the test is wrong or the fix is. Do not refactor in the same step. Do not silently widen the scope of the change.
 4. **Verify the fix.** Run the new test (green) and the *full* suite. Both must pass. If anything else now fails, the fix has side effects — treat each one as a separate failing test to address before moving on.
 5. **Add edge-case tests.** Write further tests for the obvious neighbouring cases: the boundary conditions, the empty input, the duplicate input, the related-but-different code path. These pin down the *scope* of the fix.
 6. **Refactor.** With the test suite green and the fix locked in, tidy the code: rename, extract, simplify. Run the suite after each refactor; if anything goes red, undo the last change.
@@ -39,6 +43,7 @@ When this skill is active and you have completed a bug fix, your final message s
 - The name of the failing test you wrote (and its path).
 - A short note on what made the test fail before the fix.
 - Confirmation that the full suite passed after the fix.
+- Reference the bug source (Sentry event ID, issue link, ticket reference) in the commit message and the failing test's docblock — not in production code comments.
 
 ## Narrow exceptions to the "test first" rule
 
