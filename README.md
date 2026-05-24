@@ -127,6 +127,8 @@ After adding or renaming a rule, also update the **Quick Reference** in `resourc
 - No content that overlaps Boost's built-in `laravel-best-practices/rules/*.md` — verified at authoring time.
 - No Rector config, no `tomasvotruba/unused-public` in the baseline PHPStan config (both are referenced from the relevant overlay subsections as opt-in follow-ons).
 
+For per-practice rejections — specific best-practices that were considered and deliberately left out, plus the small set of deliberate deviations from common Laravel advice — see [`DECISIONS.md`](DECISIONS.md). Consult it before proposing a new rule, so the project doesn't keep rediscovering the same answers.
+
 ## RFC nature
 
 These are best practices, not coding standards. Coding standards are the things that Pint can mechanically enforce — bracket placement, trailing commas, type-cast syntax. Best practices are the design defaults that need a person (or an AI) to apply judgement.
