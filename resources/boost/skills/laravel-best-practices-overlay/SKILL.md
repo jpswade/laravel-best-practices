@@ -1,6 +1,6 @@
 ---
 name: laravel-best-practices-overlay
-description: "Apply this skill whenever writing, reviewing, or refactoring Laravel PHP code. Complements Boost's first-party laravel-best-practices skill with opinionated additive rules where Boost is silent. Triggers for control-flow choices (switch vs. match, early returns, exception use, exception swallowing in console handle(), lone-`!` operator, magic numbers vs. enums), Eloquent design (soft deletes, redundant relationship access, transaction discipline, integer-money handling, money on job/queue/API boundaries), architectural defaults (method-naming with no 'and', context-free method names, default-private visibility, thin handle() in jobs/listeners, no logic in routes, named queues by purpose), general design (YAGNI/dead-code removal, when to use a free-function helper, double-quoted interpolation vs. sprintf, in-body code comments, dropping signature-redundant DocBlocks), and operational safety (destructive database commands such as migrate:fresh, db:wipe, schema:drop; test-database isolation). Also use for Laravel/PHP code reviews and refactoring of existing code to align with these defaults."
+description: "Apply this skill whenever writing, reviewing, or refactoring Laravel PHP or Blade code. Complements Boost's first-party laravel-best-practices skill with opinionated additive rules where Boost is silent. Triggers for control-flow choices (switch vs. match, early returns, exception use, exception swallowing in console handle(), lone-`!` operator, magic numbers vs. enums), Eloquent design (soft deletes, redundant relationship access, transaction discipline, integer-money handling, money on job/queue/API boundaries), architectural defaults (method-naming with no 'and', context-free method names, default-private visibility, thin handle() in jobs/listeners, no logic in routes, named queues by purpose), general design (YAGNI/dead-code removal, when to use a free-function helper, double-quoted interpolation vs. sprintf, in-body code comments, dropping signature-redundant DocBlocks), operational safety (destructive database commands such as migrate:fresh, db:wipe, schema:drop; test-database isolation), and Blade view design (no business logic, queries or routing decisions in @php blocks; view composers for shared partial data; presenters/accessors for computed display values). Also use for Laravel/PHP/Blade code reviews and refactoring of existing code to align with these defaults."
 license: MIT
 metadata:
   author: jpswade
@@ -59,6 +59,12 @@ Check sibling files, related controllers, models, or tests for established patte
 
 - Never run destructive database commands (`migrate:fresh`, `db:wipe`, `schema:drop`) without an explicit user request
 - Tests use an isolated database configuration; never a shared instance
+
+### 6. Blade Views → `rules/blade-views.md`
+
+- Blade is for presentation; no business logic, queries, or routing decisions in `@php` blocks
+- Use view composers for variables shared across partials of the same screen
+- Use presenters / accessors / view models for computed or formatted display values
 
 ## Composes with Boost
 
