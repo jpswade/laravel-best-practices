@@ -72,6 +72,24 @@ The shipped config carries a single narrow `ignoreErrors` entry that suppresses 
 
 The cleaner-looking alternative — disabling `dynamicCallOnStaticMethod` outright via `strictRules.disallowedDynamicCalls: false` — is rejected here. It cures the symptom by removing all coverage rather than narrowing the noise to the place it's known-safe.
 
+### Treat infrastructure exceptions as unchecked
+
+`phpstan-strict-rules`' `missingCheckedExceptionInThrows` is genuinely valuable on application code: it stops methods silently throwing exceptions their callers can't see. It is *not* valuable on infrastructure throws no user code ever catches — declaring them at every call site is pure tax with no signal.
+
+The shipped config extends `parameters.exceptions.uncheckedExceptionClasses` with the following, all of which fall in the "no Laravel application realistically catches this" category:
+
+* `PHPUnit\Framework\MockObject\Exception` — thrown by every PHPUnit prophecy / mock builder. Test code doesn't catch it; if it fires, the test fails — which is the desired behaviour.
+* `Psr\SimpleCache\InvalidArgumentException` — declared by the PSR-16 cache interface and re-thrown by Laravel's cache implementations on malformed keys. We never construct malformed keys, and there is no recovery if we did.
+* `Illuminate\Contracts\Container\BindingResolutionException` — the DI container's "unresolvable type" error. Catching it is a programming bug masked as an exception.
+* `ReflectionException` — language-level reflection failures. Should be a `LogicException` morally.
+
+Production exceptions — `Illuminate\Validation\ValidationException`, `Illuminate\Http\Client\RequestException`, `JsonException`, `Illuminate\Database\QueryException`, custom domain exceptions, etc. — are **deliberately not** on the list and still require `@throws` annotations. The cut-off is "infrastructure plumbing vs. business-meaningful failure".
+
+#### Candidates considered and rejected
+
+* **`Random\RandomException`** — declared by `random_int()` / `random_bytes()` on PHP 8.2+. Marginal: it's an `Exception` (not `Error`), and methods that use it could reasonably be expected to declare it. Left out so projects that want to declare it can; projects that don't can add it locally. Erring on the side of less editorial.
+* **`JsonException`** — encoding/decoding decisions are application-level, not infrastructure. Routinely worth declaring (or catching at the boundary) and so kept *out* of the list.
+
 ## How to use this file
 
 When considering a new addition to the overlay:

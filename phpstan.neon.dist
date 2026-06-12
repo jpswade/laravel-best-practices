@@ -44,3 +44,16 @@ parameters:
         uncheckedExceptionClasses:
             - LogicException
             - RuntimeException
+            # Infrastructure exceptions that surface as static-analysis noise
+            # across the codebase. PHPUnit's MockObject throws on every prophecy;
+            # PSR-16 (Laravel Cache) and the DI container declare these on their
+            # interfaces and user code never realistically catches them. Treating
+            # them as unchecked avoids decorating every helper, test and
+            # controller with @throws. Production-relevant exceptions
+            # (ValidationException, RequestException, JsonException, etc.) are
+            # deliberately NOT on this list and still require @throws.
+            # See DECISIONS.md ("Treat infrastructure exceptions as unchecked").
+            - PHPUnit\Framework\MockObject\Exception
+            - Psr\SimpleCache\InvalidArgumentException
+            - Illuminate\Contracts\Container\BindingResolutionException
+            - ReflectionException
