@@ -24,6 +24,18 @@ parameters:
         - tests
     checkMissingIterableValueType: true
     treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        # Eloquent forwards `Model::where(...)`, `Model::query()` etc. through
+        # `__callStatic` to a freshly-built Builder. PHPStan correctly resolves
+        # the receiver to `Illuminate\Database\Eloquent\Builder<X>` and then
+        # flags the call as "dynamic, not static". This is the documented Laravel
+        # idiom, not a bug, and routinely buries hundreds of baseline entries
+        # in any non-trivial Eloquent codebase. The rule still fires on every
+        # non-Eloquent class. See DECISIONS.md ("PHPStan: allow dynamic calls
+        # on Eloquent Builder<*>") for the trade-off.
+        -
+            identifier: staticMethod.dynamicCall
+            message: '#^Dynamic call to static method Illuminate\\Database\\Eloquent\\Builder\<.+\>\:\:.+\(\)\.$#'
     exceptions:
         check:
             missingCheckedExceptionInThrows: true
