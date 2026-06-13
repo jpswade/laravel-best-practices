@@ -53,6 +53,9 @@ jobs:
             *) echo "Expected v${{ matrix.laravel }}.x but got $RESOLVED"; exit 1 ;;
           esac
 
+      - name: Audit dependencies for known vulnerabilities
+        run: composer audit --locked --no-interaction
+
       - name: Validate phpstan.neon.dist
         run: php -r 'require "vendor/autoload.php"; Nette\Neon\Neon::decode(file_get_contents("phpstan.neon.dist"));'
 
