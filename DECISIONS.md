@@ -60,6 +60,18 @@ The traditional PHP advice — *"prefer single quotes; reach for `sprintf` whene
 
 Boost's `database.md` recommends transactions for multi-step database changes. [`rules/eloquent-opinions.md`](resources/boost/skills/laravel-best-practices-overlay/rules/eloquent-opinions.md) takes the opposite, stricter line: transactions hold locks, multiply failure modes, and should be reserved for genuine multi-row consistency requirements (canonical example: debit one balance, credit another). The deviation is flagged in-file with an instruction to delete the subsection if your team prefers Boost's default.
 
+## PHPStan config decisions
+
+Decisions about the `phpstan.neon.dist` this package ships. Each entry exists so the same trade-off doesn't keep getting re-debated.
+
+### Allow dynamic calls on Eloquent `Builder<*>`
+
+`phpstan-strict-rules' dynamicCallOnStaticMethod` flags every call where an instance method shadows a static-looking signature. Eloquent makes this idiom unavoidable: `Model::where(…)`, `Model::query()`, `Model::orderByDesc(…)`, `Model::whereNotNull(…)` and friends are forwarded through `Illuminate\Database\Eloquent\Model::__callStatic` to a freshly-constructed Builder. PHPStan correctly resolves the receiver to `Illuminate\Database\Eloquent\Builder<X>` and then complains the call is "dynamic, not static".
+
+The shipped config carries a single narrow `ignoreErrors` entry that suppresses `staticMethod.dynamicCall` **only** when the receiver matches `Illuminate\Database\Eloquent\Builder<…>`. The rule still fires on every other class — factories, helpers, registries — where it retains real signal.
+
+The cleaner-looking alternative — disabling `dynamicCallOnStaticMethod` outright via `strictRules.disallowedDynamicCalls: false` — is rejected here. It cures the symptom by removing all coverage rather than narrowing the noise to the place it's known-safe.
+
 ## How to use this file
 
 When considering a new addition to the overlay:
