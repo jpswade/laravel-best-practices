@@ -2,14 +2,14 @@
 
 Prefer namespaced lang files with `__()` for user-facing copy. Do not hard-code strings in Blade, controllers, or mail classes when a domain lang file already exists (or should).
 
-Lang files live in `resources/lang/en/`. The app locale is `en_GB` with fallback to `en` — only the `en` folder exists today.
+Store PHP lang files under `lang/{locale}/` (Laravel's default after `lang:publish`), or `resources/lang/{locale}/` if the application still uses that path. Respect the application's configured locale and fallback — do not invent a second layout.
 
 ## Namespaced lang files (preferred)
 
-Domain CRUD and feature screens (`orders`, `leads`, `features`, `reports`, etc.) use short keys in PHP lang files and `__()` with dot syntax:
+Domain CRUD and feature screens use short keys in PHP lang files and `__()` with dot syntax:
 
 ```php
-// resources/lang/en/orders.php
+// lang/en/orders.php
 'responses' => ['created' => ':name Order has been successfully added'],
 ```
 
@@ -40,11 +40,11 @@ New domain files should follow the established sections:
 - `form` — field labels
 - `responses` — flash messages in controllers
 
-Add domain-specific keys as needed (e.g. `reports.types`, `features.types`, `stations.defaults`).
+Add domain-specific keys as needed (e.g. `orders.types`, `reports.statuses`).
 
 ## Not lang files
 
-Per-account content (product names, table labels, tag names) uses Spatie translatable on models (`getTranslation()`, `displayName($locale)`), not `resources/lang/`.
+User- or account-authored content (product names, custom labels, tag names) belongs on the model — e.g. a translatable attribute package — not in application lang files.
 
 Laravel's bundled groups (`auth`, `validation`, `passwords`, `pagination`) are used implicitly — do not duplicate unless publishing overrides.
 
