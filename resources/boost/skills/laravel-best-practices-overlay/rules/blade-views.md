@@ -43,6 +43,8 @@ The template did not change; the difference is where `$paymentsShowRoute` and `$
 
 The shared rule: *the template is told what to render; it does not decide what to render.*
 
+What the user *sees* must be humanised — never the raw stored value. That principle lives in `rules/display-values.md`.
+
 ## Allowed in Blade
 
 Presentation primitives, with no decision-making:
@@ -50,7 +52,7 @@ Presentation primitives, with no decision-making:
 - `@if`, `@foreach`, `@switch`, `@include`, `@component`, `<x-*>`.
 - Simple property access: `{{ $order->reference }}`, `{{ $payment->display_card }}`.
 - Calling presentation accessors already on a model or presenter: `{{ $order->present()->subtotal }}`.
-- `route()`, `trans()` / `__()`, `asset()`, `config()` — with the values passed in from a controller or view composer.
+- `route()`, `__()` (prefer over `trans()`), `asset()`, `config()` — with the values passed in from a controller or view composer.
 - `@php` blocks that contain only IDE hints (no runtime statements), for example:
 
 ```blade
