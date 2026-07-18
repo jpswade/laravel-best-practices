@@ -73,14 +73,15 @@ resources/boost/
     │       ├── blade-views.md
     │       ├── display-values.md
     │       ├── page-toolbar.md
-    │       └── flash-messages.md
+    │       ├── flash-messages.md
+    │       └── localization.mdc
     └── tdd-bug-fixing/
         └── SKILL.md                                # six-step TDD bug-fix loop
 pint.json                                           # Laravel preset + strict_types / strict_comparison / is_null / modernize_types_casting
 phpstan.neon.dist                                   # Larastan + phpstan-strict-rules at level 6 with exception strictness
 ```
 
-The overlay's nine topic files — **Control Flow**, **Eloquent Opinions**, **Architecture Additions**, **General Design**, **Operational Safety**, **Blade Views**, **Display Values**, **Page Toolbar**, **Flash Messages** — each end with the Boost rules they compose alongside. `SKILL.md` is a thin Quick-Reference index that points at them; agents read it first (via its `description` and `when_to_use`) to decide whether to activate the skill.
+The overlay's ten topic files — **Control Flow**, **Eloquent Opinions**, **Architecture Additions**, **General Design**, **Operational Safety**, **Blade Views**, **Display Values**, **Page Toolbar**, **Flash Messages**, **Localisation** — each end with the Boost rules they compose alongside. `SKILL.md` is a thin Quick-Reference index that points at them; agents read it first (via its `description` and `when_to_use`) to decide whether to activate the skill.
 
 ## Why a skill rather than one big guideline?
 

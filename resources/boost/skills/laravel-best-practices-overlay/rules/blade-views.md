@@ -52,7 +52,7 @@ Presentation primitives, with no decision-making:
 - `@if`, `@foreach`, `@switch`, `@include`, `@component`, `<x-*>`.
 - Simple property access: `{{ $order->reference }}`, `{{ $payment->display_card }}`.
 - Calling presentation accessors already on a model or presenter: `{{ $order->present()->subtotal }}`.
-- `route()`, `trans()` / `__()`, `asset()`, `config()` — with the values passed in from a controller or view composer.
+- `route()`, `__()` (prefer over `trans()`), `asset()`, `config()` — with the values passed in from a controller or view composer.
 - `@php` blocks that contain only IDE hints (no runtime statements), for example:
 
 ```blade
