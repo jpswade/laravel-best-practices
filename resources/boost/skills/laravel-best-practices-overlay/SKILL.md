@@ -1,6 +1,6 @@
 ---
 name: laravel-best-practices-overlay
-description: "Apply this skill whenever writing, reviewing, or refactoring Laravel PHP or Blade code. Complements Boost's first-party laravel-best-practices skill with opinionated additive rules where Boost is silent. Triggers for control-flow choices (switch vs. match, early returns, exception use, exception swallowing in console handle(), lone-`!` operator, magic numbers vs. enums), Eloquent design (soft deletes, redundant relationship access, transaction discipline, integer-money handling, money on job/queue/API boundaries), architectural defaults (method-naming with no 'and', context-free method names, default-private visibility, thin handle() in jobs/listeners, no logic in routes, named queues by purpose), general design (YAGNI/dead-code removal, when to use a free-function helper, double-quoted interpolation vs. sprintf, in-body code comments, dropping signature-redundant DocBlocks), operational safety (destructive database commands such as migrate:fresh, db:wipe, schema:drop; test-database isolation), Blade view design (no business logic, queries or routing decisions in @php blocks; view composers for shared partial data; presenters/accessors for computed display values), display values (never show raw stored values in the UI — always humanised labels/formatters unless an explicit debug/devtools exception), page toolbar layout (title and breadcrumbs left, page-level actions in a toolbar slot right; shared partials for repeated controls), and flash messages (single typed session convention, shared Blade partial, avoid Fortify's status key). Also use for Laravel/PHP/Blade code reviews and refactoring of existing code to align with these defaults."
+description: "Apply this skill whenever writing, reviewing, or refactoring Laravel PHP or Blade code. Complements Boost's first-party laravel-best-practices skill with opinionated additive rules where Boost is silent. Triggers for control-flow choices (switch vs. match, early returns, exception use, exception swallowing in console handle(), lone-`!` operator, magic numbers vs. enums), Eloquent design (soft deletes, redundant relationship access, transaction discipline, integer-money handling, money on job/queue/API boundaries), architectural defaults (method-naming with no 'and', context-free method names, default-private visibility, thin handle() in jobs/listeners, no logic in routes, named queues by purpose), general design (YAGNI/dead-code removal, when to use a free-function helper, double-quoted interpolation vs. sprintf, in-body code comments, dropping signature-redundant DocBlocks), operational safety (destructive database commands such as migrate:fresh, db:wipe, schema:drop; test-database isolation), Blade view design (no business logic, queries or routing decisions in @php blocks; view composers for shared partial data; presenters/accessors for computed display values), display values (never show raw stored values in the UI — always humanised labels/formatters unless an explicit debug/devtools exception), page toolbar layout (title and breadcrumbs left, page-level actions in a toolbar slot right; shared partials for repeated controls), flash messages (single typed session convention, shared Blade partial, avoid Fortify's status key), and localisation (namespaced lang files with __(), inline strings only as a sparse exception under the rule of three). Also use for Laravel/PHP/Blade code reviews and refactoring of existing code to align with these defaults."
 license: MIT
 metadata:
   author: jpswade
@@ -84,6 +84,12 @@ Check sibling files, related controllers, models, or tests for established patte
 - `Flash::success()` / `info()` / `warning()` / `danger()` returning a single `flash` session key
 - Avoid `session('status')` when Fortify is installed
 - One shared Blade partial; validation stays on `$errors`
+
+### 10. Localisation → `rules/localization.mdc`
+
+- Prefer namespaced PHP lang files with `__('domain.key')`
+- Prefer `__()` over `trans()`
+- Inline `__('Cancel')`-style keys are permitted but not recommended; apply the rule of three in Blade
 
 ## Composes with Boost
 
