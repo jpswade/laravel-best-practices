@@ -43,6 +43,8 @@ The template did not change; the difference is where `$paymentsShowRoute` and `$
 
 The shared rule: *the template is told what to render; it does not decide what to render.*
 
+What the user *sees* must be humanised — never the raw stored value. That principle lives in `rules/display-values.md`.
+
 ## Allowed in Blade
 
 Presentation primitives, with no decision-making:
