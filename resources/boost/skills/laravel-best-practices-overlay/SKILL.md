@@ -85,7 +85,7 @@ Check sibling files, related controllers, models, or tests for established patte
 - Avoid `session('status')` when Fortify is installed
 - One shared Blade partial; validation stays on `$errors`
 
-### 10. Localisation → `rules/localization.mdc`
+### 10. Localisation → `rules/localization.md`
 
 - Prefer namespaced PHP lang files with `__('domain.key')`
 - Prefer `__()` over `trans()`

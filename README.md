@@ -74,7 +74,7 @@ resources/boost/
     │       ├── display-values.md
     │       ├── page-toolbar.md
     │       ├── flash-messages.md
-    │       └── localization.mdc
+    │       └── localization.md
     └── tdd-bug-fixing/
         └── SKILL.md                                # six-step TDD bug-fix loop
 pint.json                                           # Laravel preset + strict_types / strict_comparison / is_null / modernize_types_casting

@@ -1,9 +1,3 @@
----
-description: How to use lang files and translation helpers for user-facing copy
-globs: resources/lang/**/*.php, resources/views/**/*.blade.php, app/Http/**/*.php, app/Mail/**/*.php
-alwaysApply: false
----
-
 # Localisation
 
 Prefer namespaced lang files with `__()` for user-facing copy. Do not hard-code strings in Blade, controllers, or mail classes when a domain lang file already exists (or should).
