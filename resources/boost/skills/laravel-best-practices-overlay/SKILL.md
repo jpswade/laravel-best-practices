@@ -90,6 +90,7 @@ Check sibling files, related controllers, models, or tests for established patte
 
 - Prefer namespaced PHP lang files with `__('domain.key')`
 - Prefer `__()` over `trans()`
+- Browser/email copy (including form requests, notifications, HTTP exceptions) belongs in lang — not literals or `private const`
 - Inline `__('Cancel')`-style keys are permitted but not recommended; apply the rule of three in Blade
 
 ## Composes with Boost

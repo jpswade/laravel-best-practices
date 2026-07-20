@@ -1,6 +1,8 @@
 # Localisation
 
-Prefer namespaced lang files with `__()` for user-facing copy. Do not hard-code strings in Blade, controllers, or mail classes when a domain lang file already exists (or should).
+Prefer namespaced lang files with `__()` for user-facing copy. Do not hard-code strings in Blade, controllers, form requests, notifications, mail classes, or HTTP exception messages when a domain lang file already exists (or should).
+
+**Quick check:** if a customer or admin could read it in the browser or an email, it belongs in lang — not a string literal or a `private const` on the class.
 
 Store PHP lang files under `lang/{locale}/` (Laravel's default after `lang:publish`), or `resources/lang/{locale}/` if the application still uses that path. Respect the application's configured locale and fallback — do not invent a second layout.
 
