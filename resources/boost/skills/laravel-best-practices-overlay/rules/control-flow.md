@@ -98,7 +98,7 @@ There are legitimate uses — boundaries with third-party SDKs, infrastructure f
 
 ## Do not swallow exceptions in console `handle()`
 
-Console commands' `handle()` methods are a magnet for "wrap everything in `try`/`catch`, log the message, return `FAILURE`". Resist this. Laravel's console kernel already reports the throwable via the configured exception handler, renders it to stderr with a stack trace, and returns a non-zero exit code so `schedule:run` can escalate. A swallowing `catch` strips the stack trace and converts useful alerts into opaque "exit code [1]" notifications.
+Console commands' `handle()` methods are a magnet for "wrap everything in `try`/`catch`, log the message, return `FAILURE`". Resist this. Logging (or printing) an exception and then continuing without rethrowing is an anti-pattern in *any* `catch` — not only here — because it hides the stack trace from developers and monitoring. Laravel's console kernel already reports the throwable via the configured exception handler, renders it to stderr with a stack trace, and returns a non-zero exit code so `schedule:run` can escalate. A swallowing `catch` strips the stack trace and converts useful alerts into opaque "exit code [1]" notifications.
 
 Incorrect:
 
