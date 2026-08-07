@@ -2,7 +2,22 @@
 
 Cross-cutting design defaults that sharpen Boost's PHP core. Boost's `foundation.blade.php` and `php/core.blade.php` cover the syntactic basics; this file is about higher-level habits — when to add code, where to put it, and when to delete it.
 
-## YAGNI: remove unused code
+## YAGNI: prefer existing solutions; delete unused code
+
+### Before writing: stop at the first rung that holds
+
+After reading the code the change touches (see Consistency First in this skill's `SKILL.md`), climb this ladder and stop at the first rung that holds:
+
+1. **Need it at all?** — Skip speculative features and unused abstractions.
+2. **Already in this codebase?** — Reuse the helper, pattern, or base class that is already here. Do not introduce a second way.
+3. **PHP / Illuminate already does it?** — Prefer Collections, `Str`, `Arr`, `Number`, `blank()` / `filled()`, Carbon, and the rest of the framework helpers over a hand-rolled equivalent.
+4. **Laravel or platform feature?** — Prefer Form Requests / `Rule`, Eloquent scopes, Blade / `@csrf`, and native HTML (e.g. `<input type="date">`) before reaching for a new widget package.
+5. **Already-installed dependency?** — Use Composer packages already in the app. Do not add a new dependency for a thin wrapper around something the stack already covers.
+6. **Only then** — Write the smallest change that works: fewest files, no unrequested abstraction.
+
+Do not shrink the diff by cutting trust-boundary validation, security, accessibility, or data-loss handling. Those are not on the chopping block.
+
+### After the fact: remove unused code
 
 Unused code is a liability. It has no tests (because nothing exercises it), it carries no behaviour guarantees, and it tends to drift out of sync with the parts of the system that *are* exercised. When AI tooling sees it in context, it will faithfully replicate the now-wrong patterns it implies.
 
@@ -140,4 +155,4 @@ Boost's `php/core.blade.php` already enforces "type hint everything"; this subse
 ## Composes with Boost
 
 - [`foundation.blade.php`](https://github.com/laravel/boost/blob/main/.ai/foundation.blade.php) and [`php/core.blade.php`](https://github.com/laravel/boost/blob/main/.ai/php/core.blade.php) — Boost's universal "type-hint everything, prefer modern PHP" base. The DocBlock and interpolation guidance above is the natural next step once Boost's typing rules are in place.
-- [`tests.md`](https://github.com/laravel/boost/blob/main/.ai/laravel/skill/laravel-best-practices/rules/tests.md) — Boost covers test mechanics; the YAGNI subsection above is the design counterpart (delete the code that has no test).
+- [`tests.md`](https://github.com/laravel/boost/blob/main/.ai/laravel/skill/laravel-best-practices/rules/tests.md) — Boost covers test mechanics; the YAGNI subsection above is the design counterpart: do not write what nothing will exercise, and delete code that has no test.
