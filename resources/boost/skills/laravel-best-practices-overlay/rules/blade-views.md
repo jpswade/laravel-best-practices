@@ -71,6 +71,24 @@ View::composer('orders.partials.payment-summary', OrderPaymentSummaryComposer::c
 
 The composer is a normal PHP class, can be unit-tested in isolation, and keeps the partial's contract explicit: *I expect these variables; here is the one place that supplies them*.
 
+## No CLI in product UI
+
+Never instruct end users or operators to run Artisan (or paste raw shell) in Blade views, flash messages, empty states, or other product surfaces. Prefer plain-language outcomes — for example “this will appear after the next sync” — over `php artisan …` or equivalent CLI snippets.
+
+Keep on-screen explanations short; labels and layout should make behaviour obvious without long footnotes. Developer and ops docs (README, runbooks, `docs/`) remain the place for Artisan commands.
+
+Incorrect:
+
+```blade
+<p>No data yet. Run <code>php artisan sync:payments</code> to populate this list.</p>
+```
+
+Correct:
+
+```blade
+<p>No data yet. This list will fill after the next sync.</p>
+```
+
 ## Composes with Boost
 
 - [`blade-views.md`](https://github.com/laravel/boost/blob/main/.ai/laravel/skill/laravel-best-practices/rules/blade-views.md) — Boost owns Blade idioms (`$attributes->merge()`, `@pushOnce`, components over `@include`, `@aware`, fragments). The rule above is the separation-of-concerns principle that sits above those idioms.
