@@ -1,6 +1,6 @@
 # Control Flow
 
-Opinionated PHP control-flow guidance for cases where Boost is silent. Boost's `error-handling.md` covers how to *report* exceptions; this section covers how to *avoid* using exceptions for control flow in the first place.
+Opinionated PHP control-flow guidance for cases where Boost is silent. Boost's `error-handling.md` covers how to *report* exceptions; this section covers how to *avoid* using exceptions for control flow in the first place — and, when you do throw, how to keep the message a stable failure-class name.
 
 ## Avoid `switch`/`case`
 
@@ -132,6 +132,71 @@ public function handle(SomeService $service): int
 
 The same reasoning applies to queued jobs: rely on the framework's `failed()` hook and the `failed_jobs` machinery rather than `try`/`catch` inside `handle()`.
 
+## Keep exception and log messages stable
+
+Tools like Sentry group on exception type plus **message**. Unique values in the message (IDs, URLs, query strings, file paths, timestamps, upstream bodies, attempt counts) create one issue per occurrence and hide trends.
+
+The message names the **failure class** only. It must be identical for every instance of that failure.
+
+- Do not interpolate IDs, URLs, query strings, file paths, timestamps, or upstream body snippets into exception messages or log messages.
+- HTTP status belongs in context, not the message, unless you deliberately want separate groups per status.
+- Prefer a typed exception with a constant message over `new RuntimeException('…'.$id)`.
+- Put identifiers on the exception and expose them from `context()` — Laravel includes that array in the log entry automatically. On log lines, pass identifiers as the context array, not in the message string.
+
+Incorrect — splits the tracker per URL and status:
+
+```php
+throw new RuntimeException(
+    'Upstream request failed for '.$url.' (HTTP '.$response->status().')'
+);
+
+Log::error("Upstream request failed for {$url} (HTTP {$response->status()})");
+```
+
+Correct — one group; URL and status in `context()`:
+
+```php
+final class UpstreamRequestException extends RuntimeException
+{
+    public const REQUEST_FAILED = 'Upstream request failed.';
+
+    public function __construct(
+        private readonly string $url,
+        private readonly int $status,
+    ) {
+        parent::__construct(self::REQUEST_FAILED);
+    }
+
+    /** @return array{url: string, status: int} */
+    public function context(): array
+    {
+        return [
+            'url' => $this->url,
+            'status' => $this->status,
+        ];
+    }
+}
+
+throw new UpstreamRequestException($url, $response->status());
+
+Log::error('Upstream request failed', [
+    'url' => $url,
+    'status' => $response->status(),
+]);
+```
+
+Assert message stability in tests: two different IDs or URLs must produce the same `getMessage()`, with the unique values only in context.
+
+```php
+$a = new UpstreamRequestException('https://a.example/x', 502);
+$b = new UpstreamRequestException('https://b.example/y', 503);
+
+$this->assertSame(UpstreamRequestException::REQUEST_FAILED, $a->getMessage());
+$this->assertSame($a->getMessage(), $b->getMessage());
+$this->assertSame('https://a.example/x', $a->context()['url']);
+$this->assertNotSame($a->context()['url'], $b->context()['url']);
+```
+
 ## Return early / guard clauses
 
 Flat code is easier to read than nested code. Validate inputs and bail out at the top of the method; the happy path is then the unindented body.
@@ -258,6 +323,6 @@ The match expression at the top of this file showed an enum on the left-hand sid
 
 ## Composes with Boost
 
-- [`error-handling.md`](https://github.com/laravel/boost/blob/main/.ai/laravel/skill/laravel-best-practices/rules/error-handling.md) — once you do throw, Boost owns how to report, render and throttle exceptions.
+- [`error-handling.md`](https://github.com/laravel/boost/blob/main/.ai/laravel/skill/laravel-best-practices/rules/error-handling.md) — once you do throw, Boost owns how to report, render, throttle, and attach structured data via `context()`. The grouping subsection above is the overlay counterpart: keep the message a stable failure-class name so that context does not leak into the grouping key.
 - [`eloquent.md`](https://github.com/laravel/boost/blob/main/.ai/laravel/skill/laravel-best-practices/rules/eloquent.md) — "Define Attribute Casts" covers the casting end of the backed-enum pattern above.
 - [`style.md`](https://github.com/laravel/boost/blob/main/.ai/laravel/skill/laravel-best-practices/rules/style.md) — Boost's `blank()` / `filled()` / `Str` / `Arr` helper preferences pair naturally with the lone-`!` guidance here.
