@@ -10,7 +10,7 @@ Boost ships an excellent built-in `laravel-best-practices` skill (19 rules) that
 composer require --dev jpswade/laravel-best-practices
 ```
 
-Then make sure Laravel Boost is installed and rerun its installer so it picks up the breadcrumb guideline and the two skills shipped by this package:
+Then make sure Laravel Boost is installed and rerun its installer so it picks up the breadcrumb guideline and the three skills shipped by this package:
 
 ```bash
 composer require --dev laravel/boost
@@ -27,11 +27,11 @@ When Boost prompts *"Which third-party AI guidelines/skills would you like to in
 >     "guidelines": true,
 >     "mcp": false,
 >     "packages": ["jpswade/laravel-best-practices"],
->     "skills": ["laravel-best-practices", "laravel-best-practices-overlay", "tdd-bug-fixing"]
+>     "skills": ["laravel-best-practices", "laravel-best-practices-overlay", "tdd-bug-fixing", "adrs"]
 > }
 > ```
 
-Boost auto-discovers content from `resources/boost/{guidelines,skills}/` inside any Composer-installed package, so once opted in, the breadcrumb in this package's `core.blade.php` is composed into the consumer's always-on `AGENTS.md`, and the two skills (`laravel-best-practices-overlay` and `tdd-bug-fixing`) are written to the agent's skills directory (e.g. `.cursor/skills/`) for on-demand activation.
+Boost auto-discovers content from `resources/boost/{guidelines,skills}/` inside any Composer-installed package, so once opted in, the breadcrumb in this package's `core.blade.php` is composed into the consumer's always-on `AGENTS.md`, and the three skills (`laravel-best-practices-overlay`, `tdd-bug-fixing`, and `adrs`) are written to the agent's skills directory (e.g. `.cursor/skills/`) for on-demand activation.
 
 ### Optional: publish the bundled configs
 
@@ -75,8 +75,10 @@ resources/boost/
     │       ├── page-toolbar.md
     │       ├── flash-messages.md
     │       └── localization.md
-    └── tdd-bug-fixing/
-        └── SKILL.md                                # six-step TDD bug-fix loop
+    ├── tdd-bug-fixing/
+    │   └── SKILL.md                                # six-step TDD bug-fix loop
+    └── adrs/
+        └── SKILL.md                                # Nygard ADRs in docs/adr/
 pint.json                                           # Laravel preset + strict_types / strict_comparison / is_null / modernize_types_casting
 phpstan.neon.dist                                   # Larastan + phpstan-strict-rules at level 6 with exception strictness
 ```
@@ -109,6 +111,7 @@ vendor/jpswade/laravel-best-practices/resources/boost/guidelines/core.blade.php
 vendor/jpswade/laravel-best-practices/resources/boost/skills/laravel-best-practices-overlay/SKILL.md
 vendor/jpswade/laravel-best-practices/resources/boost/skills/laravel-best-practices-overlay/rules/*.md
 vendor/jpswade/laravel-best-practices/resources/boost/skills/tdd-bug-fixing/SKILL.md
+vendor/jpswade/laravel-best-practices/resources/boost/skills/adrs/SKILL.md
 ```
 
 Either point a Cursor rule at the files, or copy them into `.cursor/rules/`. The content is plain Markdown — it does not depend on Boost to be useful.
