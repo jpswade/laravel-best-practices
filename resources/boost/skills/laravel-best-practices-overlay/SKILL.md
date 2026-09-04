@@ -1,6 +1,6 @@
 ---
 name: laravel-best-practices-overlay
-description: "Apply this skill whenever writing, reviewing, or refactoring Laravel PHP or Blade code. Complements Boost's first-party laravel-best-practices skill with opinionated additive rules where Boost is silent. Triggers for control-flow choices (switch vs. match, early returns, exception use, exception swallowing in console handle(), stable exception and log messages for error-tracker grouping, lone-`!` operator, magic numbers vs. enums), Eloquent design (soft deletes, redundant relationship access, transaction discipline, integer-money handling, money on job/queue/API boundaries), architectural defaults (method-naming with no 'and', context-free method names, default-private visibility, thin handle() in jobs/listeners, no logic in routes, named queues by purpose), general design (YAGNI reuse ladder before writing and dead-code removal, when to use a free-function helper, double-quoted interpolation vs. sprintf, in-body code comments, dropping signature-redundant DocBlocks), operational safety (destructive database commands such as migrate:fresh, db:wipe, schema:drop; PHPUnit RefreshDatabase isolation via sqlite_testing, DB_TEST_DATABASE, beforeRefreshingDatabase; stop-the-line if Connection: mysql), Blade view design (no business logic, queries or routing decisions in @php blocks; view composers for shared partial data; presenters/accessors for computed display values; no Artisan or raw CLI in product UI), display values (never show raw stored values in the UI — always humanised labels/formatters unless an explicit debug/devtools exception), page toolbar layout (title and breadcrumbs left, page-level actions in a toolbar slot right; shared partials for repeated controls), flash messages (single typed session convention, shared Blade partial, avoid Fortify's status key), and localisation (namespaced lang files with __(), inline strings only as a sparse exception under the rule of three). Also use for Laravel/PHP/Blade code reviews and refactoring of existing code to align with these defaults."
+description: "Apply this skill whenever writing, reviewing, or refactoring Laravel PHP or Blade code. Complements Boost's first-party laravel-best-practices skill with opinionated additive rules where Boost is silent. Triggers for control-flow choices (switch vs. match, early returns, exception use, exception swallowing in console handle(), stable exception and log messages for error-tracker grouping, lone-`!` operator, magic numbers vs. enums), Eloquent design (soft deletes, redundant relationship access, transaction discipline, integer-money handling, money on job/queue/API boundaries), architectural defaults (method-naming with no 'and', context-free method names, default-private visibility, thin handle() in jobs/listeners, no logic in routes, named queues by purpose), functional naming (ubiquitous language so UI, PHP, and schema use the same domain words; no parallel developer vocabulary; verbs for methods and nouns for models; avoid vague *Manager / *Helper / *Processor application classes), general design (YAGNI reuse ladder before writing and dead-code removal, when to use a free-function helper, double-quoted interpolation vs. sprintf, in-body code comments, dropping signature-redundant DocBlocks), operational safety (destructive database commands such as migrate:fresh, db:wipe, schema:drop; PHPUnit RefreshDatabase isolation via sqlite_testing, DB_TEST_DATABASE, beforeRefreshingDatabase; stop-the-line if Connection: mysql), Blade view design (no business logic, queries or routing decisions in @php blocks; view composers for shared partial data; presenters/accessors for computed display values; no Artisan or raw CLI in product UI), display values (never show raw stored values in the UI — always humanised labels/formatters unless an explicit debug/devtools exception), page toolbar layout (title and breadcrumbs left, page-level actions in a toolbar slot right; shared partials for repeated controls), flash messages (single typed session convention, shared Blade partial, avoid Fortify's status key), and localisation (namespaced lang files with __(), inline strings only as a sparse exception under the rule of three). Also use for Laravel/PHP/Blade code reviews and refactoring of existing code to align with these defaults."
 license: MIT
 metadata:
   author: jpswade
@@ -48,7 +48,14 @@ Check sibling files, related controllers, models, or tests for established patte
 - No closures in route files; keep routes declarative
 - Name queues by the kind of work they carry
 
-### 4. General Design → `rules/general-design.md`
+### 4. Naming → `rules/naming.md`
+
+- Same domain word from UI copy through Blade/Inertia, PHP, routes, lang keys, and the schema
+- Do not invent a parallel developer vocabulary for a concept the product already named
+- Methods are verbs; models and entities are nouns — do not “correct” Laravel types such as `CreateOrderAction`
+- Name the job, not a `*Manager` (carve out `Illuminate\Support\Manager`, `ExceptionHandler`, and `handle()`)
+
+### 5. General Design → `rules/general-design.md`
 
 - YAGNI: climb the reuse ladder before writing; delete unused code
 - Reach for a free function only for cross-cutting, pure logic
@@ -56,39 +63,39 @@ Check sibling files, related controllers, models, or tests for established patte
 - Comments explain *why*, not *what* — don't narrate code, don't annotate diffs
 - Drop DocBlocks that only restate the signature
 
-### 5. Operational Safety → `rules/operational-safety.md`
+### 6. Operational Safety → `rules/operational-safety.md`
 
 - Never run destructive database commands (`migrate:fresh`, `db:wipe`, `schema:drop`) without an explicit user request
 - Tests use an isolated database configuration; never a shared instance
 - `RefreshDatabase` runs `migrate:fresh` on `database.default` — stop-the-line if output shows `Connection: mysql`; fix `phpunit.xml` / `sqlite_testing` / `beforeRefreshingDatabase()` before re-running
 
-### 6. Blade Views → `rules/blade-views.md`
+### 7. Blade Views → `rules/blade-views.md`
 
 - Blade is for presentation; no business logic, queries, or routing decisions in `@php` blocks
 - Use view composers for variables shared across partials of the same screen
 - Use presenters / accessors / view models for computed or formatted display values
 - Never expose Artisan or raw CLI in product UI; prefer plain-language outcomes
 
-### 7. Display Values → `rules/display-values.md`
+### 8. Display Values → `rules/display-values.md`
 
 - Never render raw stored values (slugs, enum case names, ISO dates, integer money, bare booleans) in the UI
 - Always show the humanised form via enum labels, formatters, accessors, or presenters
 - Exceptions only for explicit developer tooling / debug surfaces — not "admin" in general
 
-### 8. Page Toolbar → `rules/page-toolbar.md`
+### 9. Page Toolbar → `rules/page-toolbar.md`
 
 - Layout header: breadcrumbs + title left, `@section('toolbar')` right
 - Primary page actions in the toolbar slot, not in `@section('content')`
 - Compose from shared partials when controls repeat across pages
 
-### 9. Flash Messages → `rules/flash-messages.md`
+### 10. Flash Messages → `rules/flash-messages.md`
 
 - One typed flash convention per app — no feature-specific session keys
 - `Flash::success()` / `info()` / `warning()` / `danger()` returning a single `flash` session key
 - Avoid `session('status')` when Fortify is installed
 - One shared Blade partial; validation stays on `$errors`
 
-### 10. Localisation → `rules/localization.md`
+### 11. Localisation → `rules/localization.md`
 
 - Prefer namespaced PHP lang files with `__('domain.key')`
 - Prefer `__()` over `trans()`
