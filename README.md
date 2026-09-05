@@ -68,6 +68,7 @@ resources/boost/
     │       ├── control-flow.md
     │       ├── eloquent-opinions.md
     │       ├── architecture-additions.md
+    │       ├── naming.md
     │       ├── general-design.md
     │       ├── operational-safety.md
     │       ├── blade-views.md
@@ -83,7 +84,7 @@ pint.json                                           # Laravel preset + strict_ty
 phpstan.neon.dist                                   # Larastan + phpstan-strict-rules at level 6 with exception strictness
 ```
 
-The overlay's ten topic files — **Control Flow**, **Eloquent Opinions**, **Architecture Additions**, **General Design**, **Operational Safety**, **Blade Views**, **Display Values**, **Page Toolbar**, **Flash Messages**, **Localisation** — each end with the Boost rules they compose alongside. `SKILL.md` is a thin Quick-Reference index that points at them; agents read it first (via its `description` and `when_to_use`) to decide whether to activate the skill.
+The overlay's eleven topic files — **Control Flow**, **Eloquent Opinions**, **Architecture Additions**, **Naming**, **General Design**, **Operational Safety**, **Blade Views**, **Display Values**, **Page Toolbar**, **Flash Messages**, **Localisation** — each end with the Boost rules they compose alongside. `SKILL.md` is a thin Quick-Reference index that points at them; agents read it first (via its `description` and `when_to_use`) to decide whether to activate the skill.
 
 ## Why a skill rather than one big guideline?
 
@@ -92,7 +93,7 @@ Boost composes content into the consumer at install time, but it routes the two 
 - `resources/boost/guidelines/` → concatenated into the agent's always-on instructions file (e.g. `AGENTS.md` for Cursor). One file per package — additional `.md` files are silently dropped (see [`laravel/boost#822`](https://github.com/laravel/boost/issues/822)).
 - `resources/boost/skills/<name>/` → written verbatim into the agent's skills directory (e.g. `.cursor/skills/<name>/`), preserving any subdirectories. The agent loads each `SKILL.md` frontmatter at startup and activates the body **on demand** when its `description` or `when_to_use` matches the current task.
 
-The four topics in this overlay live as separate `rules/*.md` files inside the `laravel-best-practices-overlay` skill rather than as one big guideline because that lets each topic be a self-contained file (better diffs, better navigation, easier to remove an opinion you disagree with) without colliding with Boost's one-file-per-package guideline limit.
+The topic files in this overlay live as separate `rules/*.md` files inside the `laravel-best-practices-overlay` skill rather than as one big guideline because that lets each topic be a self-contained file (better diffs, better navigation, easier to remove an opinion you disagree with) without colliding with Boost's one-file-per-package guideline limit.
 
 The trade-off is honest: skill content is **not** always-on. The agent only loads the body of `laravel-best-practices-overlay` after it decides the skill is relevant — driven by the frontmatter `description` in [`SKILL.md`](resources/boost/skills/laravel-best-practices-overlay/SKILL.md), which is written to be broad enough to fire on any Laravel PHP work. The thin breadcrumb in `core.blade.php` is what *is* always-on, and its job is to nudge the agent towards the skill if its description matching ever misses.
 

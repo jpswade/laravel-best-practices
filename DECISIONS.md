@@ -36,6 +36,20 @@ The filter applied throughout is:
 
 **Not included.** Boost's `style.md` already covers consistent naming across the database, PHP, and HTTP boundaries. Adding it here would be direct overlap with Boost — exactly what the README says to avoid.
 
+Semantic alignment — using the **same domain word** from the UI through to the schema — is a different rule. That lives in [`rules/naming.md`](resources/boost/skills/laravel-best-practices-overlay/rules/naming.md). Inflection (`order_id` vs `$orderId`) stays Boost's; the overlay owns the stem (`order`, not `purchase` for the same concept).
+
+### System metaphor / desktop metaphor as overlay rules
+
+> *"The system metaphor is a story that everyone — customers, programmers, and managers can tell about how the system works."*
+
+**Not included** as a standalone rule. Kent Beck's system metaphor and the desktop metaphor are product-vocabulary exercises (dashboard vs workbench vs back office), too abstract for an AI coding default. The actionable slice — the same names from the end user through the view to the backend and the database — is encoded as ubiquitous language in [`rules/naming.md`](resources/boost/skills/laravel-best-practices-overlay/rules/naming.md).
+
+### Entity versus value-object taxonomy
+
+> *"Ask a domain expert what this is part of; if they name a proper noun, that is your entity."*
+
+**Not included.** Entity vs value object is DDD design judgement, not an actionable Laravel default for an AI to apply unprompted. The overlay names things as the product names them (`rules/naming.md`); it does not teach when a noun should be a model versus an embedded value.
+
 ### Prefer Eloquent over `DB::table()` / raw SQL
 
 > *"Avoid talking directly to the database; use Eloquent."*
