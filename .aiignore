@@ -1,0 +1,79 @@
+# Credential protection template: gitignore-style paths relative to the project.
+# These are exclusions, not a universal access-control mechanism.
+# Agents must also follow the credential boundary in project instructions.
+# Do not read first and redact later. No automatic exception for sample files.
+# Home-directory stores (e.g. ~/.composer/auth.json) require host permissions;
+# this project file does not fence off files outside the workspace.
+
+# Environment files, including examples, encrypted variants, and backups.
+.env*
+*.env
+*.env.*
+
+# Package-manager and other authentication stores, at any project depth.
+auth.json
+auth.json.*
+.npmrc*
+.yarnrc*
+.pypirc*
+.netrc*
+_netrc*
+.git-credentials*
+.gitconfig*
+.pgpass*
+.my.cnf*
+.vault-token*
+credentials
+credentials.*
+secrets/
+secrets.*
+*.secrets.*
+
+# Private keys, signing material, and credential bundles.
+*.key
+*.key.*
+*.pem
+*.pem.*
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa*
+id_dsa*
+id_ecdsa*
+id_ed25519*
+service-account*.json
+service_account*.json
+*-service-account.json
+
+# Credential directories if copied or mounted into the project.
+.ssh/
+.gnupg/
+.aws/
+.azure/
+.kube/
+.docker/
+**/.config/gcloud/
+**/.config/composer/
+.composer/
+
+# Laravel resolved config, runtime data, and database/backup exports.
+**/bootstrap/cache/config.php*
+**/storage/logs/
+**/storage/framework/cache/
+**/storage/framework/sessions/
+*.log
+*.log.*
+*.sqlite
+*.sqlite*
+*.db
+*.sql
+*.sql.*
+*.dump
+*.dump.*
+backups/
+*.bak
+*.backup
+
+# Raw Git objects/history may retain deleted secrets.
+.git/
