@@ -9,18 +9,22 @@ description: >-
 license: MIT
 metadata:
   author: jpswade
-when_to_use:
-  - The user asks to write, update, or supersede an Architecture Decision Record.
-  - A hard-to-reverse architecture or product-architecture choice is being made (schema, module boundaries, tenancy, external integrations, lock-in).
-  - A design session has settled a decision that would surprise a future reader without context.
-when_not_to_use:
-  - Routine implementation, bug fixes, or choices already obvious from framework or platform defaults.
-  - Local capability details (page behaviour, field lists) that belong in a feature doc.
-  - Glossary or ubiquitous-language updates — those belong in CONTEXT.md via domain-modeling.
-  - Work still being designed — keep that in working notes until a decision is actually made.
 ---
 
 # Architecture Decision Records
+
+## When to use
+
+- The user asks to write, update, or supersede an Architecture Decision Record.
+- A hard-to-reverse architecture or product-architecture choice is being made (schema, module boundaries, tenancy, external integrations, lock-in).
+- A design session has settled a decision that would surprise a future reader without context.
+
+## When not to use
+
+- Routine implementation, bug fixes, or choices already obvious from framework or platform defaults.
+- Local capability details (page behaviour, field lists) that belong in a feature doc.
+- Glossary or ubiquitous-language updates — use the repository's existing domain documentation conventions.
+- Work still being designed — keep that in working notes until a decision is actually made.
 
 ADRs are the durable record of **why**. Feature or capability docs describe **what**. Plans, prototypes, and issue notes are working notes — not the long-term record.
 

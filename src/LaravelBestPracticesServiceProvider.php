@@ -12,6 +12,7 @@ final class LaravelBestPracticesServiceProvider extends ServiceProvider
     {
         $pintSource = __DIR__ . '/../pint.json';
         $phpstanSource = __DIR__ . '/../phpstan.neon.dist';
+        $aiignoreSource = __DIR__ . '/../.aiignore';
 
         $this->publishes([
             $pintSource => base_path('pint.json'),
@@ -22,8 +23,13 @@ final class LaravelBestPracticesServiceProvider extends ServiceProvider
         ], 'laravel-best-practices-phpstan');
 
         $this->publishes([
+            $aiignoreSource => base_path('.aiignore'),
+        ], 'laravel-best-practices-aiignore');
+
+        $this->publishes([
             $pintSource => base_path('pint.json'),
             $phpstanSource => base_path('phpstan.neon.dist'),
+            $aiignoreSource => base_path('.aiignore'),
         ], 'laravel-best-practices-all');
     }
 }

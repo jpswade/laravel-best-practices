@@ -30,7 +30,7 @@ jobs:
         run: composer validate --strict --no-check-publish
 
       - name: PHP lint
-        run: find src -name '*.php' -print0 | xargs -0 -n1 php -l
+        run: find src scripts -name '*.php' -print0 | xargs -0 -n1 php -l
 
       - name: Validate pint.json
         run: php -r 'json_decode(file_get_contents("pint.json"), null, 512, JSON_THROW_ON_ERROR);'
@@ -43,6 +43,9 @@ jobs:
           composer require "illuminate/support:^${{ matrix.laravel }}.0" --no-update --no-interaction
           composer require --dev "nette/neon:^3.4" --no-update --no-interaction
           composer update --prefer-dist --no-progress --no-interaction
+
+      - name: Validate portable agent skills
+        run: composer validate:skills
 
       - name: Verify resolved illuminate/support major
         run: |

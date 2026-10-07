@@ -11,6 +11,12 @@
         "php": "^8.2",
         "illuminate/support": "^10.0 || ^11.0 || ^12.0 || ^13.0"
     },
+    "require-dev": {
+        "symfony/yaml": "^7.0"
+    },
+    "scripts": {
+        "validate:skills": "@php scripts/validate_skills.php"
+    },
     "autoload": {
         "psr-4": {
             "Jpswade\\LaravelBestPractices\\": "src/"

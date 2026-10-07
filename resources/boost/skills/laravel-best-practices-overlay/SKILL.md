@@ -1,6 +1,12 @@
 ---
 name: laravel-best-practices-overlay
-description: "Apply this skill whenever writing, reviewing, or refactoring Laravel PHP or Blade code. Complements Boost's first-party laravel-best-practices skill with opinionated additive rules where Boost is silent. Triggers for control-flow choices (switch vs. match, early returns, exception use, exception swallowing in console handle(), stable exception and log messages for error-tracker grouping, lone-`!` operator, magic numbers vs. enums), Eloquent design (soft deletes, redundant relationship access, transaction discipline, integer-money handling, money on job/queue/API boundaries), architectural defaults (method-naming with no 'and', context-free method names, default-private visibility, thin handle() in jobs/listeners, no logic in routes, named queues by purpose), functional naming (ubiquitous language so UI, PHP, and schema use the same domain words; no parallel developer vocabulary; verbs for methods and nouns for models; avoid vague *Manager / *Helper / *Processor application classes), general design (YAGNI reuse ladder before writing and dead-code removal, when to use a free-function helper, double-quoted interpolation vs. sprintf, in-body code comments, dropping signature-redundant DocBlocks), operational safety (destructive database commands such as migrate:fresh, db:wipe, schema:drop; PHPUnit RefreshDatabase isolation via sqlite_testing, DB_TEST_DATABASE, beforeRefreshingDatabase; stop-the-line if Connection: mysql), Blade view design (no business logic, queries or routing decisions in @php blocks; view composers for shared partial data; presenters/accessors for computed display values; no Artisan or raw CLI in product UI), display values (never show raw stored values in the UI — always humanised labels/formatters unless an explicit debug/devtools exception), page toolbar layout (title and breadcrumbs left, page-level actions in a toolbar slot right; shared partials for repeated controls), flash messages (single typed session convention, shared Blade partial, avoid Fortify's status key), and localisation (namespaced lang files with __(), inline strings only as a sparse exception under the rule of three). Also use for Laravel/PHP/Blade code reviews and refactoring of existing code to align with these defaults."
+description: >-
+  Apply Laravel and PHP best-practice opinions when writing, reviewing, or
+  refactoring PHP or Blade code. Complements Laravel Boost with control flow,
+  Eloquent and money handling, architecture, domain naming, operational safety,
+  Blade views, display formatting, toolbars, flash messages, and localisation.
+  Follow existing project conventions and load only the topic rules relevant
+  to the task. Excludes non-Laravel work and session workflow planning.
 license: MIT
 metadata:
   author: jpswade
@@ -15,6 +21,13 @@ Opinionated, additive best-practices that compose alongside Boost's built-in `la
 Before applying any rule, check what this application already does. These rules are defaults for new code in projects without an established convention — they should not override patterns the codebase already uses. Inconsistency is worse than a suboptimal pattern.
 
 Check sibling files, related controllers, models, or tests for established patterns. If one exists, follow it — don't introduce a second way.
+
+## Read only the relevant rules
+
+Use the index below to select the `rules/*.md` files needed for the current
+change. Paths are relative to this skill directory. Read those files before
+applying their detailed guidance; do not load every rule by default. These
+instructions also work as plain Markdown when the host has no skill loader.
 
 ## Quick Reference
 
@@ -65,6 +78,9 @@ Check sibling files, related controllers, models, or tests for established patte
 
 ### 6. Operational Safety → `rules/operational-safety.md`
 
+- Never read credentials or potentially secret-bearing files (`.env*`, Composer `auth.json`, keys, logs, cached config); no indirect reads or read-then-redact workarounds
+- Respect `.aiignore` exclusions; use variable names and explicitly sanitised examples instead of secret values
+- Recommend Gitleaks or equivalent in pre-commit and CI; scan built images separately, exclude secrets from build contexts, and use BuildKit secret mounts
 - Never run destructive database commands (`migrate:fresh`, `db:wipe`, `schema:drop`) without an explicit user request
 - Tests use an isolated database configuration; never a shared instance
 - `RefreshDatabase` runs `migrate:fresh` on `database.default` — stop-the-line if output shows `Connection: mysql`; fix `phpunit.xml` / `sqlite_testing` / `beforeRefreshingDatabase()` before re-running
