@@ -85,10 +85,12 @@ access controls. Host templates are a separate setup step.
 
 ## Scan for secrets before committing and publishing
 
-Recommend a dedicated secret scanner such as [Gitleaks](https://github.com/gitleaks/gitleaks)
-in developer-controlled pre-commit hooks and required CI checks. Reuse an
-existing equivalent scanner. Check staged changes before committing and the
-relevant commit range before merging; periodically scan the available full
+Choose one dedicated secret scanner: retain Gitleaks as the baseline, evaluate
+Betterleaks, or reuse an existing equivalent. The [pinned synthetic comparison
+and controlled execution example](secret-scanning.md) record coverage gaps,
+false positives, licensing, maintenance and error handling. Use developer-controlled
+pre-commit hooks and required CI checks. Check staged changes before committing
+and the relevant commit range before merging; periodically scan the available full
 history. A shallow checkout cannot prove that older history is clean. Pin the
 scanner version and fail checks on findings or scanner errors; do not silently
 allow failures. Keep false-positive exceptions narrow and reviewed.
@@ -100,6 +102,9 @@ this recommendation does **not** authorise the AI to launch discovery scans,
 read protected files, or open raw findings under the no-credential-reading
 policy above. Have the user or a controlled CI job run the scanner and provide
 only a sanitised pass/fail result or non-sensitive remediation details.
+
+Keep Betterleaks credential validation and any revocation separate from routine
+scanning; each needs explicit authorisation and owner-controlled handling.
 
 Protect container images separately:
 
@@ -126,6 +131,16 @@ the credential or remove historical copies. Coordinate repository cleanup and
 image rebuilding with the owner; do not rewrite history or delete published
 artifacts automatically. A passing scan reduces risk but is not proof that no
 credentials exist.
+
+## Handle PII separately from secrets
+
+Secret scanners do not clear personal data in production exports, logs, support
+transcripts, screenshots, fixtures or agent inputs. Prefer synthetic data; have
+an authorised owner minimise and review any necessary data in a controlled
+environment before it reaches an agent. Detection/redaction is neither proof
+of safety nor authorisation to inspect protected inputs. See the [PII practice
+and synthetic examples](pii-handling.md); Presidio is optional controlled
+preprocessing, not a runtime dependency or mandatory tool.
 
 ## Never reset the database without an explicit request
 

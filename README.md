@@ -225,15 +225,29 @@ version, active settings, and tested tool surfaces, and report untested surfaces
 as unverified. This package publishes guidance and a compatibility template;
 it does not install host permissions or enforce the policy itself.
 
-For prevention at commit and release time, use **Gitleaks or an equivalent
-secret scanner** in developer-controlled pre-commit hooks and required CI
-checks. Scan built container images separately with an image-capable scanner,
+For prevention at commit and release time, choose **one pinned secret scanner:
+Gitleaks, evaluated Betterleaks, or an existing equivalent** in developer-controlled
+pre-commit hooks and required CI checks. Scan built container images separately with an image-capable scanner,
 exclude credentials from the Docker build context, and use BuildKit secret
 mounts for build-time authentication. The
 [operational safety rules](resources/boost/skills/laravel-best-practices-overlay/rules/operational-safety.md#scan-for-secrets-before-committing-and-publishing)
 cover history/layer coverage, safe handling of findings, and credential
 rotation. This is a recommendation, not an installed hook or workflow, and
 does not authorise an AI agent to inspect credentials or raw scan findings.
+
+Secret scanning is distinct from **PII detection and handling**. Prefer synthetic
+data in fixtures and agent inputs; production exports, logs, support transcripts
+and screenshots require authorised owner minimisation and review before they
+reach an agent. Detection/redaction is not proof of safety or permission to
+inspect protected inputs. Presidio is optional controlled preprocessing.
+
+The on-demand [scanner comparison and executable examples](resources/boost/skills/laravel-best-practices-overlay/rules/secret-scanning.md)
+record pinned Gitleaks/Betterleaks results on synthetic Laravel fixtures,
+coverage gaps, false positives, report handling, maintenance and licensing.
+The [PII practice](resources/boost/skills/laravel-best-practices-overlay/rules/pii-handling.md)
+includes executed synthetic detections and misses. Credential validation and
+revocation are separate authorised operations, never routine scan steps.
+These development/CI tools add no package runtime dependencies.
 
 ## What's inside
 
