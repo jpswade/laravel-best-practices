@@ -150,6 +150,16 @@ composer require --dev larastan/larastan phpstan/phpstan-strict-rules
 vendor/bin/phpstan analyse
 ```
 
+### Optional host-specific exclusions
+
+Cursor, Gemini Code Assist, and Gemini CLI have separate opt-in publish tags:
+`laravel-best-practices-cursorignore`, `laravel-best-practices-aiexclude`, and
+`laravel-best-practices-geminiignore`. Existing files are skipped, not merged.
+The `all` tag remains the original three files. Claude and Codex permission
+examples are reviewable fragments and are never published over settings.
+See [host controls](docs/host-controls.md) for safe merging, activation,
+pattern semantics, platform limits, and synthetic verification results.
+
 ### Credential protection
 
 The Boost guideline, when loaded into the host's instructions, prohibits
@@ -222,7 +232,7 @@ Use an isolated environment without real credentials for stronger protection.
 Check file reads, terminal commands, integrations, and outside-workspace paths
 using synthetic fixtures only; never probe real secrets. Record the host,
 version, active settings, and tested tool surfaces, and report untested surfaces
-as unverified. This package publishes guidance and a compatibility template;
+as unverified. This package publishes guidance and opt-in host templates;
 it does not install host permissions or enforce the policy itself.
 
 For prevention at commit and release time, use **Gitleaks or an equivalent

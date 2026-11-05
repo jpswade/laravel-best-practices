@@ -26,6 +26,13 @@ final class LaravelBestPracticesServiceProvider extends ServiceProvider
             $aiignoreSource => base_path('.aiignore'),
         ], 'laravel-best-practices-aiignore');
 
+        // Host exclusions are deliberately opt-in, outside the legacy all tag.
+        foreach (['cursorignore', 'aiexclude', 'geminiignore'] as $hostFile) {
+            $this->publishes([
+                __DIR__ . '/../resources/host-controls/' . $hostFile => base_path('.' . $hostFile),
+            ], 'laravel-best-practices-' . $hostFile);
+        }
+
         $this->publishes([
             $pintSource => base_path('pint.json'),
             $phpstanSource => base_path('phpstan.neon.dist'),
