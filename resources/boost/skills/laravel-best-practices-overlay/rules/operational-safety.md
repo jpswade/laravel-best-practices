@@ -30,8 +30,10 @@ directories and exclude protected paths. Do not recursively search the whole
 workspace or home directory, use unrestricted hidden/ignored-file searches,
 or open a suspicious file to determine whether it contains secrets. Inspect
 only known-safe paths in diffs and history; old revisions can contain secrets
-too. Honour `.aiignore` as an instruction even when the client does not
-implement it, and retain these protections if the file is absent.
+too. Follow the sensitive-path policy regardless of host or filename. Retain
+and honour existing `.aiignore` exclusions as compatibility guidance, even
+when the client does not implement it; absence of an ignore file never relaxes
+these protections.
 
 Do not retrieve secrets indirectly through `env`, `printenv`, `phpinfo()`,
 `$_ENV`/`$_SERVER` dumps, resolved config dumps, `php artisan config:show`,
@@ -55,9 +57,31 @@ Use these alternatives:
   repeat or persist the values, and tell the user which source exposed them
   without quoting the secret. Let the user handle revocation or rotation.
 
-The bundled `.aiignore` is a conservative, gitignore-style exclusion template,
-not a universal access control. Use host-enforced permissions and an isolated
-environment without real secrets when an enforced boundary is needed.
+## Separate policy from host enforcement
+
+Instruction files (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, or host project rules)
+state policy only when discovered and loaded. Boost writing a file does not
+prove that the host reads it. Keep shared guidance with documented adapters or
+imports; discovery and precedence differ by host.
+
+Context exclusions such as `.aiignore`, `.cursorignore`, `.aiexclude`, and
+`.geminiignore` apply only to their host's supported features. Preserve existing
+exclusions, but do not treat any filename as a universal access control.
+Use the active host's supported permissions and sandbox for enforcement:
+Claude Code's `permissions.deny` and Codex permission profiles have different
+scopes. Read-only mode still permits reads and cannot by itself protect secrets.
+
+Review file tools, terminal commands, MCP/integrations, and outside-workspace
+stores separately. In T3 Code, check the active provider/harness and app tools;
+the model name does not determine protection. Never bypass a restriction via
+another tool. Prefer an isolated environment without real credentials.
+
+For versioned conventions, official sources, and documentation verification
+dates, see the package README's **Instruction loading** and **Host controls and
+documented limits** sections. Recheck the installed host's effective settings.
+Test only with synthetic fixtures and record which tool surfaces were checked;
+do not claim untested enforcement. This package supplies policy, not installed
+access controls. Host templates are a separate setup step.
 
 ## Scan for secrets before committing and publishing
 

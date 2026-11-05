@@ -68,13 +68,42 @@ the actual working directory/worktree used by the thread, and verify the
 skills are visible there. Follow T3 Code's supplied orchestration instructions
 for its tools and task lifecycle.
 
-**Claude instruction loading:** if shared project guidance lives in
-`AGENTS.md` and Claude does not load it, add `@AGENTS.md` to the project's
-`CLAUDE.md`, preserving any existing instructions. This also covers older
-Claude Code versions and configurations that read only `CLAUDE.md`. When
-using this arrangement, configure Boost's `agents.claude_code.guidelines_path`
-to `AGENTS.md` in `config/boost.php` so Boost maintains one shared guideline
-block. In Claude Code, use `/context` to check loaded instruction files.
+#### Instruction loading
+
+**Instruction loading is separate from installation.** The table above describes
+Boost output, not a promise that a host loads it. Keep common guidance in
+`AGENTS.md` and use the host's documented adapter/import where needed. Never
+assume identical discovery, scope, or precedence across hosts.
+
+The following instruction conventions were checked against official docs on
+**2026-11-05** (rolling documentation unless a version is stated):
+
+- **Codex:** loads global guidance and a project-root-to-working-directory
+  chain, with `AGENTS.override.md` preferred over `AGENTS.md` at each level;
+  deeper guidance overrides earlier guidance. See [Codex instruction discovery](https://learn.chatgpt.com/docs/agent-configuration/agents-md).
+- **Claude Code:** direct `AGENTS.md` support requires **v2.1.277+**. By default,
+  project `CLAUDE.md`, `.claude/CLAUDE.md`, or `CLAUDE.local.md` in the working
+  directory or ancestors suppress the `AGENTS.md` fallback. The Project
+  instructions setting can change this; disabled support and older sessions
+  still need `CLAUDE.md`. Preserve existing instructions and add `@AGENTS.md`
+  to a sibling `CLAUDE.md` for compatibility when needed. The import remains
+  valid on newer versions. Check `/context all`; do not assume Codex's
+  `AGENTS.override.md` semantics apply. See [Claude instruction loading](https://code.claude.com/docs/en/memory).
+  With this shared-file arrangement, set Boost's
+  `agents.claude_code.guidelines_path` to `AGENTS.md` in `config/boost.php`
+  so Boost maintains one shared block.
+- **Gemini CLI:** defaults to hierarchical `GEMINI.md` context files; a
+  `GEMINI.md` can import shared guidance with `@./AGENTS.md`. Use `/memory show`
+  to inspect loaded context. See [Gemini context and imports](https://geminicli.com/docs/cli/gemini-md/).
+- **Cursor:** supports `AGENTS.md` and scoped project rules in `.cursor/rules/`;
+  check the rule's activation settings. See [Cursor rules](https://cursor.com/docs/rules).
+- **JetBrains AI Assistant:** uses `.aiassistant/rules/*.md` project rules
+  with configurable activation. Put essential guidance in an Always rule and
+  verify it is included; do not assume a root `AGENTS.md` is loaded by chat.
+  See [JetBrains project rules (2026.2)](https://www.jetbrains.com/help/ai-assistant/configure-project-rules.html).
+- **Gemini Code Assist:** check the selected IDE and mode's context support.
+  VS Code agent mode uses Gemini CLI; this does not make every Code Assist
+  feature a CLI session. See [Code Assist agent mode](https://docs.cloud.google.com/gemini/docs/codeassist/use-agentic-chat-pair-programmer).
 
 **Verify discovery after installation:** confirm that each selected destination
 contains all four `SKILL.md` files and that the overlay's `rules/` directory
@@ -123,7 +152,8 @@ vendor/bin/phpstan analyse
 
 ### Credential protection
 
-The always-on Boost guideline prohibits reading credentials on **every task**:
+The Boost guideline, when loaded into the host's instructions, prohibits
+reading credentials on **every task**:
 API keys, tokens, passwords, `.env` values, private keys, signing secrets, and
 session credentials. It explicitly covers `.env*`, Composer `auth.json`
 (including `~/.composer/auth.json` and `~/.config/composer/auth.json`), other
@@ -140,23 +170,60 @@ including nested files. There is deliberately no exemption for `.env.example`
 or `.env.testing`. Do not use `--force` to replace an existing exclusion file;
 merge the template while retaining the project's existing protections.
 
-**An ignore file is not an enforced security boundary.** JetBrains AI Assistant
-[documents `.aiignore` support](https://www.jetbrains.com/help/ai-assistant/disable-ai-assistant.html)
-when enabled. Do not assume Claude Code, Codex, Grok Build, Antigravity, or
-T3 Code enforce this filename. The always-on instructions tell agents to honour
-its exclusions regardless, but instructions alone cannot guarantee access
-control. Project-relative patterns also cannot protect files in the user's
-home directory, and a filename list cannot identify every secret-bearing file.
+### Instructions, exclusions, and access controls
 
-Configure the selected host's supported file permissions or sandbox separately;
-for example, Claude Code has documented
-[Read deny rules](https://code.claude.com/docs/en/permissions).
-Check their coverage for file tools, terminal commands, integrations, and
-outside-workspace paths. For T3 Code, check the active provider as well as
-app-provided tools. An environment without real credentials provides a stronger
-boundary. Verify protections using synthetic fixtures, never real secrets.
-This package publishes guidance and a template; it does not silently modify
-host permissions or claim to enforce them.
+These are three different layers:
+
+- **Instructions** describe the sensitive-path policy the agent must follow.
+  `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, and project rules supply guidance;
+  they do not revoke filesystem access.
+- **Context exclusions** filter the files a particular host indexes, attaches,
+  or reads through covered features. An ignore file is not a universal
+  security boundary and does not necessarily cover terminal or MCP access.
+- **Enforced access controls** restrict operations through host permissions,
+  an OS sandbox, or an isolated environment. Their scope depends on the tool,
+  platform, version, and active configuration. Read-only access prevents
+  writes; it does **not** prevent reading secrets.
+
+Maintain a sensitive-path policy covering the credential sources above even
+when no exclusion file exists. Retain `.aiignore` for compatibility and honour
+its exclusions as project policy, then configure the active host's supported
+controls. Project-relative patterns do not cover outside-workspace credential
+stores, and filenames alone cannot identify every secret-bearing file.
+
+#### Host controls and documented limits
+
+Each entry was verified against the linked official documentation on
+**2026-11-05**. These are documentation checks, not runtime enforcement tests;
+recheck the installed version and settings before relying on a control.
+
+| Host | Supported convention and boundary | Official source / version |
+| --- | --- | --- |
+| JetBrains AI Assistant | `.aiignore` restricts AI processing when enabled in Project Settings. JetBrains documents possible unexpected processing; do not treat it as an OS sandbox or assume it governs every integrated agent. | [Restrictions](https://www.jetbrains.com/help/ai-assistant/disable-ai-assistant.html), 2026.2 help |
+| Cursor | `.cursorignore` restricts Agent/Tab and context references. Terminal and MCP tools are explicitly outside that protection. | [Ignore files](https://cursor.com/docs/reference/ignore-file), rolling docs |
+| Gemini Code Assist | `.aiexclude` is the default context-exclusion file; `.gitignore` also participates in supported context exclusion. This is not a general filesystem permission policy. | [Context exclusion](https://docs.cloud.google.com/gemini/docs/codeassist/create-aiexclude-file), rolling docs |
+| Gemini CLI | `.geminiignore` excludes paths from tools that respect it, including `@` file sharing. Do not extend that claim to arbitrary shell commands or MCP servers. | [Ignoring files](https://geminicli.com/docs/cli/gemini-ignore/), rolling docs |
+| Claude Code | `.claude/settings.json` supports `permissions.deny`, including `Read` rules for sensitive paths. File-tool rules are not a blanket restriction on Bash or MCP; review their permissions and sandbox coverage separately, including home/absolute paths. | [Permissions](https://code.claude.com/docs/en/permissions), rolling docs |
+| Codex | Beta permission profiles use `default_permissions` and `[permissions]` with filesystem `read`, `write`, and `deny` access for local sandboxed commands. Older sandbox settings can take precedence; verify the effective configuration. MCP, connectors, browser, and cloud controls are separate. Deny-glob enforcement varies by platform and can snapshot existing paths before command startup. | [Permission profiles and enforcement limits](https://learn.chatgpt.com/docs/permissions), beta; managed profile allowlists require 0.138.0+ |
+| ChatGPT uploads | Attachments supply content to a conversation. Review and sanitise what you upload; a repository ignore file does not remove content already supplied. Upload handling is distinct from Codex local filesystem permissions. Do not invent a universal OpenAI ignore filename. | [Working with ChatGPT files](https://learn.chatgpt.com/docs/use-chatgpt), rolling docs |
+
+For **T3 Code**, the [official project overview](https://github.com/pingdotgg/t3code#readme)
+describes a control surface for installed agent harnesses; its
+[permission-mode documentation](https://github.com/pingdotgg/t3code/blob/main/docs/user/permission-modes.md)
+explicitly distinguishes provider behavior (both checked 2026-11-05).
+Apply the controls of the active provider/harness and separately
+review app-provided tools, terminal access, and MCP servers. A model name does
+not establish a filesystem boundary. Follow the active session's orchestration
+and permission instructions; changing providers requires checking discovery
+and access again. This is a deployment requirement, not a claim that T3 adds
+an ignore-file enforcement layer.
+
+Use an isolated environment without real credentials for stronger protection.
+Check file reads, terminal commands, integrations, and outside-workspace paths
+using synthetic fixtures only; never probe real secrets. Record the host,
+version, active settings, and tested tool surfaces, and report untested surfaces
+as unverified. This package publishes guidance and a compatibility template;
+it does not install host permissions or enforce the policy itself.
 
 For prevention at commit and release time, use **Gitleaks or an equivalent
 secret scanner** in developer-controlled pre-commit hooks and required CI
