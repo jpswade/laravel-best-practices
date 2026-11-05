@@ -86,6 +86,60 @@ investigation to the task instead.
 
 ## Targeted verification, required checks before completion
 
+### Verify behaviour and contracts
+
+Test observable behaviour and meaningful outcomes across languages and tools.
+Do not add tests or verification scripts that merely read implementation files
+and assert expected strings, code fragments, declarations, or configuration
+literals. Such checks can pass while the implementation is broken and fail
+after a harmless refactor.
+
+- **Infrastructure as code:** use native validation and test resulting resource
+  properties or policy semantics in an isolated environment; do not search source
+  text for declarations or apply infrastructure to a live environment to test it.
+- **Shell:** execute with controlled inputs and stubbed external commands; assert
+  exit codes, output, side effects, and failure handling.
+- **Python/PHP:** exercise functions, commands, and application flows through
+  inputs, outputs, side effects, and error paths, rather than checking source code.
+- **Configuration and fixtures:** use parsers, schemas, and native validators;
+  test effective settings or exercise consumers with synthetic fixtures where
+  meaningful coverage is needed.
+
+Use the appropriate native tools for syntax, formatting, schema, and static
+validation. These complement behaviour tests; syntax validity alone does not
+prove runtime behaviour. Use synthetic data and isolated environments, following
+the existing credential and database safety boundaries.
+
+Content assertions remain appropriate when the content itself is the contract,
+such as generated configuration, a public output format, skill metadata, bundled
+references, or a required security policy. Verify parsed semantics where practical;
+assert exact text only when wording or bytes are part of the contract. A policy
+text check does not establish that a host enforces that policy.
+
+During relevant test reviews, remove tests whose only purpose is to mirror
+implementation details and which provide no independent assurance. Replace them
+with behaviour tests where meaningful coverage would otherwise be lost. Preserve
+checks that independently verify behaviour, security invariants, or contractual
+output; reading a file does not by itself make a test redundant. Keep cleanup
+within the area under review.
+
+### Compose with Test Enforcement instructions
+
+When generated project instructions require every change to be programmatically
+tested, meet that requirement with meaningful verification at the affected layer.
+This package does not assume that the generated wording originates here. Reuse
+existing sufficient checks rather than adding a new test merely to accompany
+every edit. Add or update tests when behaviour or a contract lacks coverage.
+For an application bug fix, an existing test that reproduces the defect can supply
+the red step in `tdd-bug-fixing`; run it and confirm it fails for the right reason
+before implementing the fix.
+
+This guidance does not waive required project checks or explicit test requirements.
+If a requirement cannot be met, report the gap instead of substituting a source-text
+assertion or claiming verification that did not run.
+
+### Run proportionate checks
+
 Use the repository's documented commands and test environment. While iterating,
 run the smallest check that validates the change, for example:
 
