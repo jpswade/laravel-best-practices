@@ -44,6 +44,10 @@ jobs:
           composer require --dev "nette/neon:^3.4" --no-update --no-interaction
           composer update --prefer-dist --no-progress --no-interaction
 
+      - name: Verify host exclusion pattern behavior
+        if: matrix.php == '8.3' && matrix.laravel == '13'
+        run: python3 scripts/verify_host_patterns.py
+
       - name: Validate portable agent skills
         run: composer validate:skills
 

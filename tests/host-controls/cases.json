@@ -1,0 +1,12 @@
+{
+  "deny": [
+    ".env", ".env.example", ".env.testing", ".env.encrypted", "app.env", "app.env.local",
+    "auth.json", "auth.json.backup", ".npmrc", ".yarnrc.yml", ".netrc", "credentials.json",
+    "secrets/token.txt", "private.key", "private.pem", "bundle.p12", "id_ed25519", "service-account-demo.json",
+    ".ssh/config", ".aws/config", ".config/gcloud/application_default_credentials.json", ".config/composer/auth.json",
+    "storage/logs/events.txt", "storage/framework/cache/data/item", "storage/framework/sessions/session",
+    "error.log", "error.log.1", "data.sql", "data.sql.gz", "data.dump", "database.sqlite", "backups/data.txt",
+    "bootstrap/cache/config.php", "bootstrap/cache/config.php.old", "data.bak"
+  ],
+  "allow": ["app/Models/User.php", "README.md", "config/app.php", "composer.json", "composer.lock", "bootstrap/cache/packages.php", "docs/environment.md", "public/key.svg"]
+}
