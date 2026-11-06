@@ -6,6 +6,8 @@
 
 Work from variable names, source references, and explicitly sanitised examples; if a task needs a secret, ask the user to configure it locally without revealing its value. See the overlay's `rules/operational-safety.md` for the full procedure.
 
+**Data handling:** prefer synthetic inputs. Secret scanning and PII review are separate controls; production exports, logs, support transcripts and screenshots need authorised owner handling before reaching an agent. Detection/redaction does not prove safety or authorise protected reads. Use one pinned secret scanner (Gitleaks, evaluated Betterleaks or an existing equivalent); credential validation and revocation require separate authorisation. Load `rules/secret-scanning.md` or `rules/pii-handling.md` only for the relevant procedure.
+
 This package contributes opinionated, additive Laravel best-practices via the **`laravel-best-practices-overlay`** skill in this same package, plus a **`session-scoping`** skill for how to run AI-agent sessions in this repo.
 
 Activate the `laravel-best-practices-overlay` skill whenever you are writing, reviewing, or refactoring PHP or Laravel code in this application. It composes with — and does not replace — Boost's first-party `laravel-best-practices` skill, and covers ground Boost is silent on: control-flow opinions, Eloquent design defaults (including integer-money handling), architectural defaults, ubiquitous naming across UI and schema, general design habits, UI display values (humanised, never raw), and operational safety guardrails.

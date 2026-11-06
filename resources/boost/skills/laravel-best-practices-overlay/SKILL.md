@@ -82,7 +82,10 @@ instructions also work as plain Markdown when the host has no skill loader.
 - Follow the sensitive-path policy even without ignore files; retain `.aiignore` compatibility and use variable names or explicitly sanitised examples
 - Distinguish loaded instructions, host context exclusions, and enforced permissions; read-only mode still permits secret reads
 - Check the active host/provider, terminal/MCP, and outside-workspace coverage; verify only with synthetic fixtures
-- Recommend Gitleaks or equivalent in pre-commit and CI; scan built images separately, exclude secrets from build contexts, and use BuildKit secret mounts
+- Choose one pinned secret scanner (Gitleaks, evaluated Betterleaks, or existing equivalent); load `rules/secret-scanning.md` for synthetic evidence and controlled execution
+- Treat PII separately; prefer synthetic agent inputs and load `rules/pii-handling.md` for owner-controlled preprocessing and review
+- Detection/redaction does not prove safety or authorise protected reads; validation/revocation require separate authorisation
+- Scan built images separately, exclude secrets from build contexts, and use BuildKit secret mounts
 - Never run destructive database commands (`migrate:fresh`, `db:wipe`, `schema:drop`) without an explicit user request
 - Tests use an isolated database configuration; never a shared instance
 - `RefreshDatabase` runs `migrate:fresh` on `database.default` — stop-the-line if output shows `Connection: mysql`; fix `phpunit.xml` / `sqlite_testing` / `beforeRefreshingDatabase()` before re-running
