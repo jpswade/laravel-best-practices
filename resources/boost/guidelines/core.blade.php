@@ -14,6 +14,8 @@ Activate the `laravel-best-practices-overlay` skill whenever you are writing, re
 
 Activate `tdd-bug-fixing` for application bug fixes and `adrs` for durable architectural decisions. Activate `session-scoping` before substantial implementation or when resuming unfinished work; skip it for simple questions and trivial edits. Follow the active host's planning and permission controls.
 
+**Verification:** test observable behaviour and meaningful contracts across languages and tools. Reuse sufficient existing checks; use native syntax, schema, formatting, and static validators where appropriate. Do not add tests that only search implementation files for expected strings or declarations. During relevant reviews, remove redundant content-only tests while preserving independent behaviour, security, and contractual output checks. See `session-scoping` for examples and how this composes with generated Test Enforcement instructions; required project checks still apply.
+
 Load only the relevant skill and its linked topic files. If the host has no skill loader, read `resources/boost/skills/<name>/SKILL.md` inside `vendor/jpswade/laravel-best-practices/` and resolve its links relative to that skill directory.
 
 **Always-on guardrail:** never run `php artisan migrate:fresh`, `db:wipe`, `schema:drop`, or any other destructive database command unless the user has **explicitly** asked for it in this conversation. `RefreshDatabase` in PHPUnit is the same class of risk when pointed at MySQL — if a test failure shows `Connection: mysql`, stop and fix isolation before re-running. The full rationale lives in the overlay skill's `operational-safety.md`.

@@ -1,6 +1,6 @@
 ---
 name: tdd-bug-fixing
-description: Use this skill whenever you are about to fix a bug, regression, or any reported defect in a Laravel application. The skill enforces a strict red-green-refactor loop with the failing test written before the fix.
+description: Use this skill whenever you are about to fix a bug, regression, or any reported defect in a Laravel application. The skill enforces a strict red-green-refactor loop with a reproducing test failing before the fix.
 ---
 
 # TDD Bug-Fixing
@@ -26,13 +26,18 @@ When fixing a bug in this repository, follow the red-green-refactor loop below. 
     - Under what exact conditions does it happen (user role, data shape, feature flag, timing, environment)?
     - Who or what is affected?
     - Is this new behaviour, or a regression of something that used to work?
-2. **Write a failing test.** Encode the reproduction as a test in the appropriate suite (`tests/Feature`, `tests/Unit`, etc.). Run it. It must fail for the *right reason* — the same assertion the bug violates in production. A test that fails for a setup reason is not a reproduction.
+2. **Establish a failing test.** Reuse an existing test if it already reproduces the defect; otherwise add or update a test in the appropriate suite (`tests/Feature`, `tests/Unit`, etc.). Run it before the fix. It must fail for the *right reason* — the same assertion the bug violates in production. A test that fails for a setup reason is not a reproduction. Exercise observable behaviour, not the presence of strings or code fragments in implementation files.
 3. **Implement the minimal fix.** Change only what is required to turn the test green. Fix the root cause, not the symptom — if the test passes only because you suppressed the failure (caught the exception, short-circuited the path, loosened the assertion), the test is wrong or the fix is. Do not refactor in the same step. Do not silently widen the scope of the change.
-4. **Verify the fix.** Run the new test (green) and the affected tests. Investigate failures introduced by the change; report unrelated pre-existing failures separately. **Stop-the-line:** if output shows `Connection: mysql` (or the shared development database), do **not** re-run PHPUnit — `RefreshDatabase` will wipe local data. Fix test isolation (`phpunit.xml`, `sqlite_testing` / `DB_TEST_DATABASE`, `beforeRefreshingDatabase()`) first; see the overlay's `operational-safety.md`.
-5. **Add edge-case tests.** Write further tests for the obvious neighbouring cases: the boundary conditions, the empty input, the duplicate input, the related-but-different code path. These pin down the *scope* of the fix.
+4. **Verify the fix.** Run the reproducing test (green) and the affected tests. Investigate failures introduced by the change; report unrelated pre-existing failures separately. **Stop-the-line:** if output shows `Connection: mysql` (or the shared development database), do **not** re-run PHPUnit — `RefreshDatabase` will wipe local data. Fix test isolation (`phpunit.xml`, `sqlite_testing` / `DB_TEST_DATABASE`, `beforeRefreshingDatabase()`) first; see the overlay's `operational-safety.md`.
+5. **Cover edge cases.** Check coverage for the obvious neighbouring cases: the boundary conditions, the empty input, the duplicate input, the related-but-different code path. Reuse sufficient existing tests and add tests for missing meaningful coverage. These pin down the *scope* of the fix.
 6. **Refactor.** With the test suite green and the fix locked in, tidy the code: rename, extract, simplify. Run affected tests after each refactor. Before completion, run required project checks, including the full suite when required by project policy or change impact. Format before final verification and repeat affected checks only if further changes or failures justify it. This follows `session-scoping`'s verification policy.
 
 ## Conventions for the failing test
+
+Follow [session-scoping's verification guidance](../session-scoping/SKILL.md#verify-behaviour-and-contracts)
+across languages and tools. During relevant reviews, remove redundant tests that
+only mirror implementation contents; preserve independent behaviour, security,
+and contractual output checks, and replace any meaningful coverage lost.
 
 - **Name it after the bug.** `test_subscription_renewal_charges_correctly_after_proration` is useful; `test_bug_fix` is not.
 - **One assertion per behaviour.** A test that asserts six things is six tests in a trenchcoat — when it fails, you don't know which behaviour broke.
@@ -44,7 +49,7 @@ When fixing a bug in this repository, follow the red-green-refactor loop below. 
 When this skill is active and you have completed a bug fix, your final message should include:
 
 - A one-line summary of the bug.
-- The name of the failing test you wrote (and its path).
+- The name of the failing test you added, updated, or reused (and its path).
 - A short note on what made the test fail before the fix.
 - The verification commands run and their results, including whether the full suite ran and any limitations.
 - Reference the bug source (Sentry event ID, issue link, ticket reference) in the commit message and the failing test's docblock — not in production code comments.

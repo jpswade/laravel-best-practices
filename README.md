@@ -360,6 +360,19 @@ composer install
 composer validate:skills
 ```
 
+Follow [behaviour-based verification guidance](resources/boost/skills/session-scoping/SKILL.md#verify-behaviour-and-contracts)
+for application code, infrastructure, shell scripts, configuration, and fixtures.
+Reuse sufficient existing checks; generated Test Enforcement instructions do not
+justify tests that merely search implementation text. During relevant reviews,
+remove redundant content-only tests and replace any meaningful coverage lost.
+Preserve independent behaviour, security, and contractual output checks.
+
+The skill validator checks a published metadata and reference contract, so its
+content checks remain useful. CI's syntax/parsing, dependency-resolution, audit,
+and autoload checks also provide independent assurance and should be retained.
+For prose changes, review the guidance and links alongside `composer validate:skills`;
+that command validates structure, not instruction quality or host enforcement.
+
 After changes to packaging or supported agent paths, rerun `boost:install` in
 a disposable Laravel application that directly requires this package and
 Boost. Verify the four skills and nested rule files at each selected agent's
