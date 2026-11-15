@@ -110,8 +110,9 @@ contains all four `SKILL.md` files and that the overlay's `rules/` directory
 was copied too. Refresh or restart the agent if necessary. In a new session,
 ask it to locate `laravel-best-practices-overlay` and identify the rule file
 for integer money handling without editing anything. It should read
-`rules/eloquent-opinions.md`. A question unrelated to Laravel should not load
-all the overlay rules. Repeat in each host/provider you use; copied files
+`rules/eloquent-opinions.md`. Also ask it to review a Laravel API contract
+without editing PHP; it should select `rules/apis.md`. A question unrelated
+to Laravel should not load all the overlay rules. Repeat in each host/provider you use; copied files
 alone do not prove automatic activation.
 
 These skills use standard Agent Skills metadata and plain Markdown; they do
@@ -279,6 +280,7 @@ resources/boost/
     │       ├── display-values.md
     │       ├── page-toolbar.md
     │       ├── flash-messages.md
+    │       ├── apis.md
     │       └── localization.md
     ├── tdd-bug-fixing/
     │   └── SKILL.md                                # six-step TDD bug-fix loop
@@ -291,7 +293,12 @@ phpstan.neon.dist                                   # Larastan + phpstan-strict-
 .aiignore                                          # credential and sensitive runtime-file exclusions
 ```
 
-The overlay's eleven topic files — **Control Flow**, **Eloquent Opinions**, **Architecture Additions**, **Naming**, **General Design**, **Operational Safety**, **Blade Views**, **Display Values**, **Page Toolbar**, **Flash Messages**, **Localisation** — each end with the Boost rules they compose alongside. `SKILL.md` is a thin Quick-Reference index that points at them; agents read it first (via its `description`) to decide whether to activate the skill.
+The overlay's topic files — **APIs**, **Control Flow**, **Eloquent Opinions**, **Architecture Additions**, **Naming**, **General Design**, **Operational Safety**, **Blade Views**, **Display Values**, **Page Toolbar**, **Flash Messages**, **Localisation** — each end with the Boost rules they compose alongside. `SKILL.md` is a thin Quick-Reference index that points at them; agents read it first (via its `description`) to decide whether to activate the skill.
+
+The [API rules](resources/boost/skills/laravel-best-practices-overlay/rules/apis.md)
+provide ordered principles, actionable defaults and public citations for API
+design and review. Existing contracts, project standards and installed
+Laravel/Boost guidance take precedence over new API defaults.
 
 `session-scoping` is a different kind of skill: instead of code-style rules, it covers how to run the AI-agent session itself — one bounded deliverable at a time, a task contract up front, host-aware effort recommendations, targeted verification before required project checks, recovering stalled work, and a short handoff note for work spanning multiple sessions.
 
@@ -304,7 +311,7 @@ Boost composes content into the consumer at install time, but it routes the two 
 
 The topic files in this overlay live as separate `rules/*.md` files inside the `laravel-best-practices-overlay` skill rather than as one big guideline because that lets each topic be a self-contained file (better diffs, better navigation, easier to remove an opinion you disagree with) while keeping detailed rules out of the always-on context.
 
-The trade-off is honest: skill content is **not** always-on. The agent only loads the body of `laravel-best-practices-overlay` (or `session-scoping`) after it decides the skill is relevant — driven by the frontmatter `description` in each `SKILL.md`, written to be broad enough to fire on any Laravel PHP work (or, for `session-scoping`, on the start of substantial agent work). The thin breadcrumb in `core.blade.php` is what *is* always-on, and its job is to nudge the agent towards both skills if its description matching ever misses.
+The trade-off is honest: skill content is **not** always-on. The agent only loads the body of `laravel-best-practices-overlay` (or `session-scoping`) after it decides the skill is relevant — driven by the frontmatter `description` in each `SKILL.md`, written to cover Laravel PHP work and HTTP API design or contract review (or, for `session-scoping`, the start of substantial agent work). The thin breadcrumb in `core.blade.php` is what *is* always-on, and its job is to nudge the agent towards both skills if its description matching ever misses.
 
 ## Position relative to Boost
 
