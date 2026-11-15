@@ -2,7 +2,8 @@
 name: laravel-best-practices-overlay
 description: >-
   Apply Laravel and PHP best-practice opinions when writing, reviewing, or
-  refactoring PHP or Blade code. Complements Laravel Boost with control flow,
+  refactoring PHP or Blade code, or designing and reviewing Laravel HTTP APIs.
+  Complements Laravel Boost with API contract and safety decisions, control flow,
   Eloquent and money handling, architecture, domain naming, operational safety,
   Blade views, display formatting, toolbars, flash messages, and localisation.
   Follow existing project conventions and load only the topic rules relevant
@@ -122,6 +123,17 @@ instructions also work as plain Markdown when the host has no skill loader.
 - Prefer `__()` over `trans()`
 - Browser/email copy (including form requests, notifications, HTTP exceptions) belongs in lang — not literals or `private const`
 - Inline `__('Cancel')`-style keys are permitted but not recommended; apply the rule of three in Blade
+
+### 12. APIs → `rules/apis.md`
+
+Load for Laravel HTTP API design, implementation or review, including contract-only changes.
+
+- Apply the ordered API principles; existing contracts, project standards and installed Laravel/Boost guidance take precedence over new defaults
+- Preserve consumer compatibility and use version-supported mechanisms
+- Keep API machine values distinct from UI formatting; retain integer money
+- Enforce tenant boundaries and bounded work; keep the selected representation and error protocol consistent
+- Add idempotency, concurrency checks and operation resources only where needed
+- Read the conditional retry/background-work section only when those mechanisms apply
 
 ## Composes with Boost
 
