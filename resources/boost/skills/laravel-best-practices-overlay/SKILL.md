@@ -75,6 +75,7 @@ instructions also work as plain Markdown when the host has no skill loader.
 - Reach for a free function only for cross-cutting, pure logic
 - Prefer double-quoted interpolation; use `sprintf` only for genuinely formatted output
 - Comments explain *why*, not *what* — don't narrate code, don't annotate diffs
+- Every TODO needs a path to TO-DONE: reference an existing issue, backlog item, or equivalent tracked task with clear completion criteria
 - Drop DocBlocks that only restate the signature
 
 ### 6. Operational Safety → `rules/operational-safety.md`
