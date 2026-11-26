@@ -102,6 +102,14 @@ if ($user->isActive()) {
 
 `// new: …`, `// updated to support X`, `// previously …` belong in the commit message, not in the file. They go stale immediately, and AI tools will read them as current truth.
 
+## Every TODO needs a path to TO-DONE
+
+Never add a TODO without a concrete way for it to get completed. Before adding one, create or identify an issue, backlog item, or equivalent tracked task in the project's established system, and reference it directly in the TODO with a link or an unambiguous identifier.
+
+The tracked task must describe the remaining work and what counts as done. The TODO should explain why the work is deferred and point to that task; a bare `TODO: fix later`, a person's name, or a promise to raise an issue later is not enough. Apply the same rule to `FIXME`, `HACK`, and other markers that defer work.
+
+If you cannot create or locate tracked work, complete the work now or report the unresolved follow-up to the user without adding an untracked TODO. Never invent a ticket reference. Remove the marker when the work is completed.
+
 ## When a comment earns its place
 
 Keep a comment only when the reason is not derivable from the code itself:
