@@ -5,7 +5,8 @@ description: >-
   refactoring PHP or Blade code, or designing and reviewing Laravel HTTP APIs.
   Complements Laravel Boost with API contract and safety decisions, control flow,
   Eloquent and money handling, architecture, domain naming, operational safety,
-  Blade views, display formatting, toolbars, flash messages, and localisation.
+  Blade views, display formatting, toolbars, flash messages, localisation,
+  and feature availability and release flags.
   Follow existing project conventions and load only the topic rules relevant
   to the task. Excludes non-Laravel work and session workflow planning.
 license: MIT
@@ -135,6 +136,17 @@ Load for Laravel HTTP API design, implementation or review, including contract-o
 - Enforce tenant boundaries and bounded work; keep the selected representation and error protocol consistent
 - Add idempotency, concurrency checks and operation resources only where needed
 - Read the conditional retry/background-work section only when those mechanisms apply
+
+### 13. Feature Toggles → `rules/feature-toggles.md`
+
+Load when adding or reviewing Laravel feature flags, environment-based behaviour or release controls.
+
+- Check explicit capabilities and configuration rather than environment names
+- Separate deployment from release when independent rollout is needed; reuse existing flag mechanisms
+- Keep release flags, operational switches, account preferences and authorisation distinct
+- Gate server-side entry points as well as UI; test enabled, disabled and missing-flag behaviour
+- Distinguish missing flags from evaluator failures and define propagation and rollback behaviour
+- Give temporary release flags an owner and tracked removal condition
 
 ## Composes with Boost
 

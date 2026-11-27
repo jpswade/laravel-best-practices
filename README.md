@@ -281,6 +281,7 @@ resources/boost/
     │       ├── page-toolbar.md
     │       ├── flash-messages.md
     │       ├── apis.md
+    │       ├── feature-toggles.md
     │       └── localization.md
     ├── tdd-bug-fixing/
     │   └── SKILL.md                                # six-step TDD bug-fix loop
@@ -293,7 +294,7 @@ phpstan.neon.dist                                   # Larastan + phpstan-strict-
 .aiignore                                          # credential and sensitive runtime-file exclusions
 ```
 
-The overlay's topic files — **APIs**, **Control Flow**, **Eloquent Opinions**, **Architecture Additions**, **Naming**, **General Design**, **Operational Safety**, **Blade Views**, **Display Values**, **Page Toolbar**, **Flash Messages**, **Localisation** — each end with the Boost rules they compose alongside. `SKILL.md` is a thin Quick-Reference index that points at them; agents read it first (via its `description`) to decide whether to activate the skill.
+The overlay's topic files — **APIs**, **Control Flow**, **Eloquent Opinions**, **Architecture Additions**, **Naming**, **General Design**, **Operational Safety**, **Blade Views**, **Display Values**, **Page Toolbar**, **Flash Messages**, **Localisation**, **Feature Toggles** — each end with the Boost rules they compose alongside. `SKILL.md` is a thin Quick-Reference index that points at them; agents read it first (via its `description`) to decide whether to activate the skill.
 
 The [API rules](resources/boost/skills/laravel-best-practices-overlay/rules/apis.md)
 provide ordered principles, actionable defaults and public citations for API
