@@ -93,8 +93,9 @@ compatible with the paths that can still run during rollout or rollback.
 
 Give each temporary release flag an owner and a tracked removal condition.
 Once rollout is complete and the rollback window has closed, remove the flag
-checks, obsolete path and associated tests, then retire the stored flag after
-remaining deployed consumers no longer need it. Keep deliberate long-lived
+checks, obsolete path and tests specific to the removed flag or obsolete path.
+Preserve regression tests for the retained behaviour. Retire the stored flag
+after remaining deployed consumers no longer need it. Keep deliberate long-lived
 operational controls and account preferences where they still serve a purpose.
 
 ## Composes with Boost
