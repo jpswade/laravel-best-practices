@@ -2,10 +2,12 @@
 name: laravel-best-practices-overlay
 description: >-
   Apply Laravel and PHP best-practice opinions when writing, reviewing, or
-  refactoring PHP or Blade code, or designing and reviewing Laravel HTTP APIs.
+  refactoring PHP or Blade code, or designing and reviewing Laravel HTTP APIs
+  and public enquiry handling.
   Complements Laravel Boost with API contract and safety decisions, control flow,
   Eloquent and money handling, architecture, domain naming, operational safety,
-  Blade views, display formatting, toolbars, flash messages, and localisation.
+  Blade views, display formatting, toolbars, flash messages, localisation,
+  and enquiry submission and spam review.
   Follow existing project conventions and load only the topic rules relevant
   to the task. Excludes non-Laravel work and session workflow planning.
 license: MIT
@@ -135,6 +137,20 @@ Load for Laravel HTTP API design, implementation or review, including contract-o
 - Enforce tenant boundaries and bounded work; keep the selected representation and error protocol consistent
 - Add idempotency, concurrency checks and operation resources only where needed
 - Read the conditional retry/background-work section only when those mechanisms apply
+
+### 13. Enquiry Handling → `rules/enquiry-handling.md`
+
+Load for public contact forms, sales enquiries, demonstration requests and referrals, including submission-contract review.
+
+- Share one protected submission pipeline; separate provider adapters from policy
+- Persist before notifying; deduplicate keyed retries with a database constraint, including soft-deleted records
+- Tie receipts to the submitting session and preserve only allowlisted retry inputs
+- Apply failure policy per layer; inconclusive reputation checks never bypass CAPTCHA or validation
+- Fetch fresh CAPTCHA tokens on submit and provide accessible recovery from failed attempts
+- Claim notification attempts atomically; an attempt does not prove delivery
+- Keep suspicion profiling read-only and junk decisions explainable and reversible
+- Separate junk retention from ordinary retention; verify with synthetic data and stubbed providers
+- Keep baseline behaviour distinct from optional adaptations and product-specific tuning
 
 ## Composes with Boost
 
